@@ -19,6 +19,7 @@
     "@mantine/notifications": "^7.11.1",
     "@mantine/spotlight": "^7.11.1",
     "@mantine/tiptap": "^7.11.1",
+    "@prisma/client": "^5.16.2",
     "@tabler/icons-react": "^3.10.0",
     "@tanstack/react-query": "^5.50.1",
     "@tiptap/extension-link": "^2.4.0",

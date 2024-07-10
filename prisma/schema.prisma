@@ -13,3 +13,61 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
+model Workflow {
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String?
+  status       String
+  processes    Process[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  workflowRuns WorkflowRun[]
+}
+
+model Process {
+  id             Int          @id @default(autoincrement())
+  workflowId     Int
+  name           String
+  description    String?
+  n8nWorkflowIds String[]
+  fields         Json
+  workflow       Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  ProcessRun     ProcessRun[]
+}
+
+model WorkflowRun {
+  id          Int          @id @default(autoincrement())
+  workflowId  Int
+  workflow    Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  processRuns ProcessRun[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProcessRun {
+  id            Int         @id @default(autoincrement())
+  workflowRunId Int
+  processId     Int
+  submission    Submission?
+  workflowRun   WorkflowRun @relation(fields: [workflowRunId], references: [id], onDelete: Cascade)
+  process       Process     @relation(fields: [processId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([workflowRunId, processId])
+}
+
+model Submission {
+  id           Int        @id @default(autoincrement())
+  processRunId Int
+  data         Json
+  processRun   ProcessRun @relation(fields: [processRunId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([processRunId])
+}
