@@ -4,8 +4,8 @@ import { auth, signIn, signOut } from "@server/auth";
 import { IconBrandGoogle } from "@tabler/icons-react";
 
 export default async function Home() {
-  const session = await auth();
-  console.log(session);
+  /* const session = await auth(); */
+
   return (
     <AuthLayout>
       <Stack gap="sm">
