@@ -7,36 +7,44 @@ export default async function middleware(request: NextRequest) {
 
   const loginUrl = new URL("/", nextUrl);
   const onboardingUrl = new URL("/user-onboarding", nextUrl);
+  const organizationOnboardingUrl = new URL(
+    "/organization-onboarding",
+    nextUrl
+  );
+  const dashboardUrl = new URL("/dashboard", nextUrl);
 
-  if (!session && nextUrl.pathname !== loginUrl.pathname) {
-    return NextResponse.redirect(loginUrl);
+  if (!session) {
+    if (nextUrl.pathname !== loginUrl.pathname) {
+      return NextResponse.redirect(loginUrl);
+    }
+    return NextResponse.next();
   }
 
-  if (session) {
-    const user = await fetch(`http://localhost:3000/api/get-user`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: session.user.id,
-        appApiKey: process.env.APP_API_KEY,
-      }),
-    }).then((data) => data.json());
+  const user = await fetch(`http://localhost:3000/api/get-user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userId: session.user.id,
+      appApiKey: process.env.APP_API_KEY,
+    }),
+  }).then((data) => data.json());
 
-    if (
-      (user.firstName === null || user.lastName === null) &&
-      nextUrl.pathname !== onboardingUrl.pathname
-    ) {
+  if (user.firstName === null || user.lastName === null) {
+    if (nextUrl.pathname !== onboardingUrl.pathname) {
       return NextResponse.redirect(onboardingUrl);
     }
-
+  } else if (user.organizationId === null) {
+    if (nextUrl.pathname !== organizationOnboardingUrl.pathname) {
+      return NextResponse.redirect(organizationOnboardingUrl);
+    }
+  } else {
     if (
-      user.firstName !== null &&
-      user.lastName !== null &&
-      nextUrl.pathname === onboardingUrl.pathname
+      nextUrl.pathname === onboardingUrl.pathname ||
+      nextUrl.pathname === organizationOnboardingUrl.pathname
     ) {
-      return NextResponse.redirect(new URL("/dashboard", nextUrl));
+      return NextResponse.redirect(dashboardUrl);
     }
   }
 
