@@ -14,8 +14,17 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model Organization {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Workflow {
-  id           Int           @id @default(autoincrement())
+  id           String        @id @default(uuid())
   name         String
   description  String?
   status       String
@@ -26,8 +35,8 @@ model Workflow {
 }
 
 model Process {
-  id             Int          @id @default(autoincrement())
-  workflowId     Int
+  id             String       @id @default(uuid())
+  workflowId     String
   name           String
   description    String?
   n8nWorkflowIds String[]
@@ -39,8 +48,8 @@ model Process {
 }
 
 model WorkflowRun {
-  id          Int          @id @default(autoincrement())
-  workflowId  Int
+  id          String       @id @default(uuid())
+  workflowId  String
   workflow    Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   processRuns ProcessRun[]
 
@@ -49,9 +58,9 @@ model WorkflowRun {
 }
 
 model ProcessRun {
-  id            Int         @id @default(autoincrement())
-  workflowRunId Int
-  processId     Int
+  id            String      @id @default(uuid())
+  workflowRunId String
+  processId     String
   submission    Submission?
   workflowRun   WorkflowRun @relation(fields: [workflowRunId], references: [id], onDelete: Cascade)
   process       Process     @relation(fields: [processId], references: [id], onDelete: Cascade)
@@ -62,8 +71,8 @@ model ProcessRun {
 }
 
 model Submission {
-  id           Int        @id @default(autoincrement())
-  processRunId Int
+  id           String     @id @default(uuid())
+  processRunId String
   data         Json
   processRun   ProcessRun @relation(fields: [processRunId], references: [id], onDelete: Cascade)
   createdAt    DateTime   @default(now())
@@ -81,8 +90,10 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
 }
 
 model Account {
