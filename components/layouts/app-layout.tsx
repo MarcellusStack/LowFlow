@@ -1,5 +1,6 @@
 "use client";
 import { Branding } from "@components/branding";
+import { Breadcrumb } from "@components/breadcrumb";
 import { UserButton } from "@components/user-button";
 import { AppShell, Button, Flex, Loader, Stack } from "@mantine/core";
 import { IconArrowsRandom, IconLayoutDashboard } from "@tabler/icons-react";
@@ -68,7 +69,10 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
         ))}
       </AppShell.Navbar>
       <AppShell.Main>
-        <Stack gap="sm">{children}</Stack>
+        <Stack gap="sm">
+          <Breadcrumb />
+          {children}
+        </Stack>
       </AppShell.Main>
     </AppShell>
   );
