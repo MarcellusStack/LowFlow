@@ -1,7 +1,7 @@
 "use client";
 import { Branding } from "@components/branding";
 import { UserButton } from "@components/user-button";
-import { AppShell, Button, Flex, Loader } from "@mantine/core";
+import { AppShell, Button, Flex, Loader, Stack } from "@mantine/core";
 import { IconArrowsRandom, IconLayoutDashboard } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -67,7 +67,9 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
           <NavLink link={link} key={link.id} />
         ))}
       </AppShell.Navbar>
-      <AppShell.Main p="sm">{children}</AppShell.Main>
+      <AppShell.Main>
+        <Stack gap="sm">{children}</Stack>
+      </AppShell.Main>
     </AppShell>
   );
 };
