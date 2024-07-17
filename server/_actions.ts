@@ -1,10 +1,10 @@
 "use server";
 
 import { authedProcedure } from "@server/utils/procedures";
-
-import { signOut } from "@server/auth";
+import { signIn, signOut } from "@server/auth";
 import { z } from "zod";
 import { redirect } from "next/navigation";
+import { createServerAction } from "zsa";
 
 export const signOutAction = authedProcedure
   .createServerAction()
@@ -12,4 +12,10 @@ export const signOutAction = authedProcedure
   .handler(async () => {
     await signOut();
     redirect("/");
+  });
+
+export const signInAction = createServerAction()
+  .input(z.object({}))
+  .handler(async () => {
+    await signIn("google");
   });
