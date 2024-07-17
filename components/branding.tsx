@@ -11,7 +11,7 @@ export const Branding = () => {
       className="flex items-center gap-3 text-black"
       style={{ textDecoration: "none" }}
     >
-      <Box className="p-3 rounded-sm bg-gray-100 grid place-items-center">
+      <Box className="p-2 rounded-sm bg-gray-100 grid place-items-center">
         <Image src="/branding.png" width={32} height={32} alt="branding" />
       </Box>
       <Text fw={700} size="xl">
