@@ -9,8 +9,10 @@ export type EnhancedActionProps = {
   action: any;
   redirectUrl?: string;
   hideModals?: boolean;
+  notification?: boolean;
   onStart?: () => void;
   onSuccess?: (data: any) => void;
+  onFinish?: (data: any) => void;
   onError?: (error: any) => void;
 };
 
@@ -18,8 +20,10 @@ export const useEnhancedAction = ({
   action,
   redirectUrl,
   hideModals,
+  notification = true,
   onStart,
   onSuccess,
+  onFinish,
   onError,
 }: EnhancedActionProps) => {
   const router = useRouter();
@@ -31,36 +35,41 @@ export const useEnhancedAction = ({
           return;
         }
 
-        notifications.hide(executeNotification);
+        if (notification) {
+          notifications.hide(executeNotification);
 
-        notifications.show({
-          id: uuidv4(),
-          withBorder: true,
-          autoClose: 5000,
-          title: "Error",
-          message: err ? err : "There was an error please try again",
-          color: "red",
-        });
+          notifications.show({
+            id: uuidv4(),
+            withBorder: true,
+            autoClose: 5000,
+            title: "Error",
+            message: err ? err : "There was an error please try again",
+            color: "red",
+          });
+        }
 
         if (onError && error) {
           onError(error);
         }
       },
       onSuccess: ({ data }) => {
+        console.log(data);
         if (!data) {
           return;
         }
 
-        notifications.hide(executeNotification);
+        if (notification) {
+          notifications.hide(executeNotification);
 
-        notifications.show({
-          id: uuidv4(),
-          withBorder: true,
-          autoClose: 5000,
-          title: "Success",
-          message: data.message as string,
-          color: "green",
-        });
+          notifications.show({
+            id: uuidv4(),
+            withBorder: true,
+            autoClose: 5000,
+            title: "Success",
+            message: data.message as string,
+            color: "green",
+          });
+        }
 
         if (hideModals) {
           modals.closeAll();
@@ -77,22 +86,27 @@ export const useEnhancedAction = ({
         return data;
       },
       onStart: () => {
-        notifications.show({
-          id: executeNotification,
-          withCloseButton: false,
-          loading: true,
-          withBorder: true,
-          autoClose: false,
-          title: "Executing",
-          message: "Please wait",
-          color: "yellow",
-        });
+        if (notification) {
+          notifications.show({
+            id: executeNotification,
+            withCloseButton: false,
+            loading: true,
+            withBorder: true,
+            autoClose: false,
+            title: "Executing",
+            message: "Please wait",
+            color: "yellow",
+          });
+        }
+
         if (onStart) {
           onStart();
         }
       },
       onFinish: ([data, err]) => {
-        console.log("Server action finished (invoked after onError/onSuccess)");
+        if (onFinish) {
+          onFinish(data);
+        }
       },
       retry: {
         maxAttempts: 3,
