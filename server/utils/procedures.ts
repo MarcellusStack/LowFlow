@@ -1,5 +1,6 @@
 import { auth } from "@server/auth";
 import { createServerActionProcedure, ZSAError } from "zsa";
+import { getCachedUser } from "./get-cached-user";
 
 export const authedProcedure = createServerActionProcedure().handler(
   async () => {
@@ -12,8 +13,10 @@ export const authedProcedure = createServerActionProcedure().handler(
       );
     }
 
+    const user = await getCachedUser(session.user?.id as string);
+
     return {
-      user: session.user,
+      user: user,
     };
   }
 );
