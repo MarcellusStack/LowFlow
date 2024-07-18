@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  staleTimes: {
-    dynamic: 0,
-    static: 300,
+  experimental: {
+    staleTimes: {
+      dynamic: 0,
+      static: 300,
+    },
   },
 };
 
