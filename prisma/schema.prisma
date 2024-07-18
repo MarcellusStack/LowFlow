@@ -15,23 +15,26 @@ datasource db {
 }
 
 model Organization {
-  id          String   @id @default(uuid())
-  name        String   @unique
+  id          String     @id @default(uuid())
+  name        String     @unique
   description String?
   users       User[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  workflows   Workflow[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Workflow {
-  id           String        @id @default(uuid())
-  name         String
-  description  String?
-  status       String
-  processes    Process[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  workflowRuns WorkflowRun[]
+  id             String        @id @default(uuid())
+  name           String
+  description    String?
+  status         String
+  processes      Process[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  workflowRuns   WorkflowRun[]
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String?
 }
 
 model Process {
