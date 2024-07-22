@@ -1,23 +1,14 @@
 "use client";
 import React from "react";
 import { useForm } from "@mantine/form";
-import {
-  Button,
-  Grid,
-  Group,
-  Select,
-  Spoiler,
-  Stack,
-  Textarea,
-  TextInput,
-  Text,
-} from "@mantine/core";
+import { Button, Grid, Select, Textarea, TextInput } from "@mantine/core";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useEnhancedAction } from "@hooks/use-enhanced-action";
 import { updateWorkflow, WorkflowProps } from "../_actions";
 import { updateWorkflowSchema } from "../_schemas";
 import { Fieldset } from "@components/fieldset";
 import { presentationStatus } from "@constants/presentation-status";
+import { GridColumn } from "@components/grid-column";
 
 export const GeneralWorkflowForm = ({
   workflow,
@@ -46,29 +37,29 @@ export const GeneralWorkflowForm = ({
     >
       <Fieldset legend="General">
         <Grid gutter="sm" grow>
-          <Grid.Col span={{ base: 12, sm: 12, md: 6, xl: 4 }}>
+          <GridColumn column={4}>
             <TextInput
               withAsterisk
               label="Name"
               key={form.key("name")}
               {...form.getInputProps("name")}
             />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 12, md: 6, xl: 4 }}>
+          </GridColumn>
+          <GridColumn column={4}>
             <Textarea
               label="Description"
               key={form.key("description")}
               {...form.getInputProps("description")}
             />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 12, md: 6, xl: 4 }}>
+          </GridColumn>
+          <GridColumn column={4}>
             <Select
               label="Status"
               key={form.key("status")}
               data={presentationStatus}
               {...form.getInputProps("status")}
             />
-          </Grid.Col>
+          </GridColumn>
         </Grid>
         <Button my="sm" color="black" type="submit" loading={isPending}>
           Save
