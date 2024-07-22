@@ -53,7 +53,6 @@ export const useEnhancedAction = ({
         }
       },
       onSuccess: ({ data }) => {
-        console.log(data);
         if (!data) {
           return;
         }

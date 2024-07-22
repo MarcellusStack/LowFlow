@@ -22,7 +22,8 @@
       "@server/*": ["./server/*"],
       "@utils/*": ["./utils/*"],
       "@constants/*": ["./constants/*"],
-      "@hooks/*": ["./hooks/*"]
+      "@hooks/*": ["./hooks/*"],
+      "@schemas/*": ["./schemas/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

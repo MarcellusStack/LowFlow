@@ -28,7 +28,7 @@ export const WorkflowLayout = ({
           subtitle={workflow.description}
         />
         <SecondaryPageTabs
-          page="season-plans"
+          page="workflows"
           links={[
             {
               value: `/`,

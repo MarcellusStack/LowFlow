@@ -7,6 +7,8 @@ import { authFilterQuery } from "@server/utils/query-clients";
 import { cache } from "react";
 import { updateWorkflowSchema } from "./_schemas";
 import { PresentationStatus } from "@prisma/client";
+import { deleteSchema } from "@schemas/index";
+import { redirect } from "next/navigation";
 
 export const getWorkflow = cache(
   authFilterQuery(async (user, search) => {
@@ -51,4 +53,21 @@ export const updateWorkflow = authedProcedure
     revalidatePath(`/(app)/workflows/${input.id}`, "page");
 
     return { message: `Updated Workflow` };
+  });
+
+export const deleteWorkflow = authedProcedure
+  .createServerAction()
+  .input(deleteSchema)
+  .handler(async ({ input, ctx }) => {
+    try {
+      const { user } = ctx;
+
+      await prisma.workflow.delete({
+        where: { id: input.id, organizationId: user.organizationId },
+      });
+    } catch (error) {
+      throw new Error(`There was an error please try again ${error.message}`);
+    }
+
+    redirect("/workflows");
   });
