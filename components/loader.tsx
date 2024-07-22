@@ -9,7 +9,7 @@ export const Loader = () => {
       direction="column"
       style={{ height: "calc(100vh - 137px)" }}
     >
-      <Spinner color="blue" />
+      <Spinner color="black" />
     </Flex>
   );
 };
