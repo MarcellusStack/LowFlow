@@ -22,6 +22,7 @@ model Organization {
   workflows   Workflow[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  processes   Process[]
 }
 
 model Workflow {
@@ -33,21 +34,24 @@ model Workflow {
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
   workflowRuns   WorkflowRun[]
-  organization   Organization?      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String?
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
 }
 
 model Process {
-  id             String       @id @default(uuid())
+  id             String             @id @default(uuid())
   workflowId     String
   name           String
   description    String?
+  status         PresentationStatus @default(public)
   n8nWorkflowIds String[]
-  fields         Json
-  workflow       Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  fields         Json?
+  workflow       Workflow           @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
   ProcessRun     ProcessRun[]
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
 }
 
 model WorkflowRun {
