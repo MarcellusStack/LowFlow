@@ -10,6 +10,19 @@ export const getWorkflows = authFilterQuery(async (user, search) => {
   return await prisma.workflow.findMany({
     where: {
       organizationId: user.organizationId,
+      ...(search.search
+        ? {
+            OR: [
+              { name: { contains: search.search, mode: "insensitive" } },
+              {
+                description: {
+                  contains: search.search,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          }
+        : {}),
     },
     select: {
       id: true,

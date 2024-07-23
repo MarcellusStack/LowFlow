@@ -1,10 +1,15 @@
 import { QuickSearchAdd } from "@components/quick-search-add";
-import { getWorkflows } from "./_actions";
 import { CreateWorkflowForm } from "./_components/create-workflow-form";
 import { Workflows } from "./_components/workflows";
+import { Suspense } from "react";
+import { SuspenseLoader } from "@components/suspense-loader";
 
-export default async function Page() {
-  const workflows = (await getWorkflows()) ?? [];
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { search?: string };
+}) {
+  const { search } = searchParams;
 
   return (
     <>
@@ -12,7 +17,9 @@ export default async function Page() {
         title="Create Workflow"
         content={<CreateWorkflowForm />}
       />
-      <Workflows workflows={workflows} />
+      <Suspense fallback={<SuspenseLoader entity="Workflows" />}>
+        <Workflows searchParams={{ search: search }} />
+      </Suspense>
     </>
   );
 }
