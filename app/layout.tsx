@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
-import "./globals.css";
+
 import "@mantine/core/styles.css";
+import "mantine-datatable/styles.layer.css";
+import "./mantine-datatable.css";
 import "@mantine/notifications/styles.css";
+import "@mantine/dates/styles.css";
+import "@mantine/charts/styles.css";
+
+import "@mantine/spotlight/styles.css";
+import "./globals.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { theme } from "@utils/theme";
 import { Notifications } from "@mantine/notifications";
