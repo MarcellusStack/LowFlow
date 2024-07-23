@@ -1,7 +1,7 @@
-import { DeleteWorkflowForm } from "../_components/delete-workflow-form";
+import { DangerWorkflow } from "../_components/danger-workflow";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
 
-  return <DeleteWorkflowForm id={id} />;
+  return <DangerWorkflow id={id} />;
 }

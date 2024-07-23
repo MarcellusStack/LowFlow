@@ -69,5 +69,5 @@ export const deleteWorkflow = authedProcedure
       throw new Error(`There was an error please try again ${error.message}`);
     }
 
-    redirect("/workflows");
+    return { message: `Deleted Workflow` };
   });
