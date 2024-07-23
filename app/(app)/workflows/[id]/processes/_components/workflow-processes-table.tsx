@@ -7,6 +7,7 @@ import { DeleteActionIcon } from "@components/delete-action-icon";
 import { UpdateModalActionIcon } from "@components/update-modal-action-icon";
 import { deleteWorkflowProcess, WorkflowProcessesProps } from "../_actions";
 import { WorkflowProcessForm } from "./workflow-process-form";
+import { PresentationStatusBadge } from "@components/presentation-badge";
 
 export const WorkflowProcessesTable = ({
   processes,
@@ -20,6 +21,7 @@ export const WorkflowProcessesTable = ({
         {
           accessor: "status",
           title: "Status",
+          render: ({ status }) => <PresentationStatusBadge status={status} />,
           ...tableColumnProps,
         },
         {
