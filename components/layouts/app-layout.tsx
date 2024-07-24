@@ -3,7 +3,11 @@ import { Branding } from "@components/branding";
 import { Breadcrumb } from "@components/breadcrumb";
 import { UserButton } from "@components/user-button";
 import { AppShell, Button, Flex, Loader, Stack } from "@mantine/core";
-import { IconArrowsRandom, IconLayoutDashboard } from "@tabler/icons-react";
+import {
+  IconArrowsRandom,
+  IconArrowsShuffle,
+  IconLayoutDashboard,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
@@ -28,6 +32,12 @@ export const navLinks: NavLinkProps[] = [
     href: "/workflows",
     icon: <IconArrowsRandom stroke={1.5} />,
     label: "Workflows",
+  },
+  {
+    id: "nav-9X5R2J5YX7",
+    href: "/processes",
+    icon: <IconArrowsShuffle stroke={1.5} />,
+    label: "Processes",
   },
 ];
 
