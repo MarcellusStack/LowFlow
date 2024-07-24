@@ -15,6 +15,7 @@ import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@server/auth";
+import { ReactQueryProvider } from "@providers/react-query";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -35,11 +36,13 @@ export default async function RootLayout({
       <body>
         <MantineProvider theme={theme}>
           <Notifications />
-          <ModalsProvider>
-            <SessionProvider refetchInterval={30} session={session}>
-              {children}
-            </SessionProvider>
-          </ModalsProvider>
+          <ReactQueryProvider>
+            <ModalsProvider>
+              <SessionProvider refetchInterval={30} session={session}>
+                {children}
+              </SessionProvider>
+            </ModalsProvider>
+          </ReactQueryProvider>
         </MantineProvider>
       </body>
     </html>
