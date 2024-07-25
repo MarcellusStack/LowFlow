@@ -5,16 +5,21 @@ import React from "react";
 type ButtonActionProps = ButtonProps & {
   action: any;
   values?: { [key: string]: any };
+  redirectUrl?: string;
+  hideModals?: boolean;
 };
 
 export const ButtonAction = ({
   action,
   values,
+  redirectUrl,
+  hideModals,
   ...props
 }: ButtonActionProps) => {
   const { execute, isPending } = useEnhancedAction({
     action: action,
-    hideModals: true,
+    ...(hideModals && { hideModals: true }),
+    ...(redirectUrl && { redirectUrl: redirectUrl }),
   });
 
   return (

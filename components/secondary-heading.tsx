@@ -4,7 +4,7 @@ import React from "react";
 
 export type SecondaryHeadingProps = {
   title: string;
-  subtitle: string | null;
+  subtitle?: string | null;
 };
 
 export const SecondaryHeading = ({

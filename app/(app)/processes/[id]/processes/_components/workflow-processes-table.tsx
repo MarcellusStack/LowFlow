@@ -1,19 +1,18 @@
 "use client";
-import { ActionIcon, Group, Text } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 import { MantineTable } from "@components/mantine-table";
 import { tableColumnProps } from "@constants/index";
 import { ViewActionIcon } from "@components/view-action-icon";
 import { DeleteActionIcon } from "@components/delete-action-icon";
 import { UpdateModalActionIcon } from "@components/update-modal-action-icon";
-import { deleteProcess, ProcessesProps } from "../_actions";
+import { deleteWorkflowProcess, WorkflowProcessesProps } from "../_actions";
+import { WorkflowProcessForm } from "./workflow-process-form";
 import { PresentationStatusBadge } from "@components/presentation-badge";
-import { ProcessForm } from "./process-form";
-import { IconFileSearch, IconZoomScan } from "@tabler/icons-react";
 
-export const ProcessesTable = ({
+export const WorkflowProcessesTable = ({
   processes,
 }: {
-  processes: ProcessesProps;
+  processes: WorkflowProcessesProps;
 }) => {
   return (
     <MantineTable
@@ -36,11 +35,6 @@ export const ProcessesTable = ({
           ...tableColumnProps,
         },
         {
-          accessor: "workflow.name",
-          title: "Workflow",
-          ...tableColumnProps,
-        },
-        {
           accessor: "n8nWorkflowIds",
           title: "n8n Workflows",
           render: ({ n8nWorkflowIds }) => (
@@ -57,25 +51,24 @@ export const ProcessesTable = ({
               <ViewActionIcon href={`/processes/${process.id}`} />
               <UpdateModalActionIcon
                 entity="Process"
-                content={<ProcessForm process={process} />}
+                content={
+                  <WorkflowProcessForm
+                    workflowId={process.workflowId}
+                    process={process}
+                  />
+                }
               />
               <DeleteActionIcon
                 id={process.id}
-                action={deleteProcess}
+                action={deleteWorkflowProcess}
                 entity="Process"
               />
-              <ActionIcon color="black" variant="subtle">
-                <IconFileSearch
-                  style={{ width: "70%", height: "70%" }}
-                  stroke={1.5}
-                />
-              </ActionIcon>
             </Group>
           ),
           ...tableColumnProps,
         },
       ]}
-      storeKey="processes-table"
+      storeKey="workflow-processes-table"
     />
   );
 };
