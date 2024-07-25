@@ -8,6 +8,7 @@ import { UpdateModalActionIcon } from "@components/update-modal-action-icon";
 import { deleteWorkflowProcess, WorkflowProcessesProps } from "../_actions";
 import { WorkflowProcessForm } from "./workflow-process-form";
 import { PresentationStatusBadge } from "@components/presentation-badge";
+import { PreviewProcess } from "../../../../processes/_components/preview-process";
 
 export const WorkflowProcessesTable = ({
   processes,
@@ -63,6 +64,7 @@ export const WorkflowProcessesTable = ({
                 action={deleteWorkflowProcess}
                 entity="Process"
               />
+              <PreviewProcess json={process.fields} />
             </Group>
           ),
           ...tableColumnProps,
