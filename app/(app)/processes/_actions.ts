@@ -41,6 +41,7 @@ export const getProcesses = cache(
           },
         },
         n8nWorkflowIds: true,
+        fields: true,
       },
     });
   })
