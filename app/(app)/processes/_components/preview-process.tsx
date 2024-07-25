@@ -5,7 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconFileSearch } from "@tabler/icons-react";
 import React from "react";
 
-export const PreviewProcess = ({ json }: { json: unknown }) => {
+export const PreviewProcess = ({ json }: { json: Object }) => {
   const [opened, { open, close }] = useDisclosure(false);
   return (
     <>
