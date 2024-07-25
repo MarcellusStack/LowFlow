@@ -19,6 +19,7 @@ export const DeleteActionIcon = ({ id, entity, action }: DeleteActionProps) => {
           children: (
             <>
               <ButtonAction
+              hideModals
                 color="red"
                 fullWidth
                 action={action}
