@@ -18,7 +18,13 @@ export const DangerWorkflow = ({ id }: { id: string }) => {
       <ButtonModal
         color="red"
         content={
-          <ButtonAction color="red" action={deleteWorkflow} values={{ id: id }}>
+          <ButtonAction
+            redirectUrl="/workflows"
+            hideModals={true}
+            color="red"
+            action={deleteWorkflow}
+            values={{ id: id }}
+          >
             Delete
           </ButtonAction>
         }
