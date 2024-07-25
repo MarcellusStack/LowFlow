@@ -46,10 +46,11 @@ model Process {
   status         PresentationStatus @default(public)
   n8nWorkflowIds String[]
   fields         Json?
+  order          Float              @default(10.0)
   workflow       Workflow           @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
-  ProcessRun     ProcessRun[]
+  processRuns    ProcessRun[]
   organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 }
@@ -59,9 +60,8 @@ model WorkflowRun {
   workflowId  String
   workflow    Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   processRuns ProcessRun[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model ProcessRun {
