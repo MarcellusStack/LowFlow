@@ -15,14 +15,17 @@ datasource db {
 }
 
 model Organization {
-  id          String     @id @default(uuid())
-  name        String     @unique
-  description String?
-  users       User[]
-  workflows   Workflow[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  processes   Process[]
+  id           String        @id @default(uuid())
+  name         String        @unique
+  description  String?
+  users        User[]
+  workflows    Workflow[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  processes    Process[]
+  workflowRuns WorkflowRun[]
+  processRuns  ProcessRun[]
+  submissions  Submission[]
 }
 
 model Workflow {
@@ -56,34 +59,42 @@ model Process {
 }
 
 model WorkflowRun {
-  id          String       @id @default(uuid())
-  workflowId  String
-  workflow    Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  processRuns ProcessRun[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id             String        @id @default(uuid())
+  workflowId     String
+  workflow       Workflow      @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  processRuns    ProcessRun[]
+  status         ProcessStatus @default(open)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model ProcessRun {
-  id            String      @id @default(uuid())
-  workflowRunId String
-  processId     String
-  submission    Submission?
-  workflowRun   WorkflowRun @relation(fields: [workflowRunId], references: [id], onDelete: Cascade)
-  process       Process     @relation(fields: [processId], references: [id], onDelete: Cascade)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id             String        @id @default(uuid())
+  workflowRunId  String
+  processId      String
+  submission     Submission?
+  workflowRun    WorkflowRun   @relation(fields: [workflowRunId], references: [id], onDelete: Cascade)
+  process        Process       @relation(fields: [processId], references: [id], onDelete: Cascade)
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  status         ProcessStatus @default(open)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@unique([workflowRunId, processId])
 }
 
 model Submission {
-  id           String     @id @default(uuid())
-  processRunId String
-  data         Json
-  processRun   ProcessRun @relation(fields: [processRunId], references: [id], onDelete: Cascade)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id             String       @id @default(uuid())
+  processRunId   String
+  data           Json
+  processRun     ProcessRun   @relation(fields: [processRunId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   @@unique([processRunId])
 }
