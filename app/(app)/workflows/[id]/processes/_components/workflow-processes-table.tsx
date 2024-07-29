@@ -1,14 +1,20 @@
 "use client";
-import { Group, Text } from "@mantine/core";
+import { ActionIcon, Button, Group, Text } from "@mantine/core";
 import { MantineTable } from "@components/mantine-table";
 import { tableColumnProps } from "@constants/index";
 import { ViewActionIcon } from "@components/view-action-icon";
 import { DeleteActionIcon } from "@components/delete-action-icon";
 import { UpdateModalActionIcon } from "@components/update-modal-action-icon";
-import { deleteWorkflowProcess, WorkflowProcessesProps } from "../_actions";
+import {
+  deleteWorkflowProcess,
+  reorderWorkflowProcesses,
+  WorkflowProcessesProps,
+} from "../_actions";
 import { WorkflowProcessForm } from "./workflow-process-form";
 import { PresentationStatusBadge } from "@components/presentation-badge";
 import { PreviewProcess } from "../../../../processes/_components/preview-process";
+import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
+import { ActionIconAction } from "@components/action-icon-action";
 
 export const WorkflowProcessesTable = ({
   processes,
@@ -47,8 +53,8 @@ export const WorkflowProcessesTable = ({
           accessor: "actions",
           title: "Aktionen",
           width: "0%",
-          render: (process) => (
-            <Group gap={0} justify="flex-end">
+          render: (process, index) => (
+            <Group gap={0} justify="flex-end" wrap="nowrap">
               <ViewActionIcon href={`/processes/${process.id}`} />
               <UpdateModalActionIcon
                 entity="Process"

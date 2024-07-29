@@ -46,7 +46,7 @@ model Process {
   status         PresentationStatus @default(public)
   n8nWorkflowIds String[]
   fields         Json?
-  order          Float              @default(10.0)
+  order          Float              @default(10)
   workflow       Workflow           @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt

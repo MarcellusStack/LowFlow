@@ -11,6 +11,7 @@ import {
   updateWorkflowProcessesSchema,
   workflowProcessesSchema,
 } from "./_schemas";
+import { z } from "zod";
 
 export const getWorkflowProcesses = cache(
   authFilterQuery(async (user, search) => {
@@ -31,6 +32,9 @@ export const getWorkflowProcesses = cache(
               ],
             }
           : {}),
+      },
+      orderBy: {
+        order: "asc",
       },
       select: {
         id: true,
@@ -133,3 +137,5 @@ export const deleteWorkflowProcess = authedProcedure
 
     return { message: `Deleted Process` };
   });
+
+

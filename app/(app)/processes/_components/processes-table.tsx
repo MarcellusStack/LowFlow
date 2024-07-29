@@ -1,5 +1,5 @@
 "use client";
-import { Group, Text } from "@mantine/core";
+import { ActionIcon, Group, Text } from "@mantine/core";
 import { MantineTable } from "@components/mantine-table";
 import { tableColumnProps } from "@constants/index";
 import { ViewActionIcon } from "@components/view-action-icon";
@@ -9,6 +9,7 @@ import { deleteProcess, ProcessesProps } from "../_actions";
 import { PresentationStatusBadge } from "@components/presentation-badge";
 import { ProcessForm } from "./process-form";
 import { PreviewProcess } from "./preview-process";
+import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 
 export const ProcessesTable = ({
   processes,
@@ -53,7 +54,7 @@ export const ProcessesTable = ({
           title: "Aktionen",
           width: "0%",
           render: (process) => (
-            <Group gap={0} justify="flex-end">
+            <Group gap={0} justify="flex-end" wrap="nowrap">
               <ViewActionIcon href={`/processes/${process.id}`} />
               <UpdateModalActionIcon
                 entity="Process"
@@ -65,6 +66,7 @@ export const ProcessesTable = ({
                 entity="Process"
               />
               <PreviewProcess json={process.fields} />
+              
             </Group>
           ),
           ...tableColumnProps,
