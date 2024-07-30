@@ -13,4 +13,5 @@ export const defaultCreatorOptions: ICreatorOptions = {
   showTranslationTab: true,
   showSaveButton: true,
   isAutoSave: false,
+  showThemeTab: true,
 };
