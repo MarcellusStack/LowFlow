@@ -43,7 +43,7 @@ export const useEnhancedAction = ({
             withBorder: true,
             autoClose: 5000,
             title: "Error",
-            message: err ? err : "There was an error please try again",
+            message: "There was an error please try again",
             color: "red",
           });
         }
