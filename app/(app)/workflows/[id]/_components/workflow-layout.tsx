@@ -4,6 +4,7 @@ import { Stack } from "@mantine/core";
 import { SecondaryPageTabs } from "@components/secondary-page-tabs";
 import {
   IconAlertTriangle,
+  IconArrowBigRightLines,
   IconArrowsShuffle,
   IconInfoSquare,
 } from "@tabler/icons-react";
@@ -39,6 +40,11 @@ export const WorkflowLayout = ({
               value: `processes`,
               icon: <IconArrowsShuffle size={16} stroke={1.5} />,
               label: "Processes",
+            },
+            {
+              value: `runs`,
+              icon: <IconArrowBigRightLines size={16} stroke={1.5} />,
+              label: "Runs",
             },
             {
               value: `danger`,

@@ -1,20 +1,14 @@
 "use client";
-import { ActionIcon, Button, Group, Text } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 import { MantineTable } from "@components/mantine-table";
 import { tableColumnProps } from "@constants/index";
 import { ViewActionIcon } from "@components/view-action-icon";
 import { DeleteActionIcon } from "@components/delete-action-icon";
 import { UpdateModalActionIcon } from "@components/update-modal-action-icon";
-import {
-  deleteWorkflowProcess,
-  reorderWorkflowProcesses,
-  WorkflowProcessesProps,
-} from "../_actions";
+import { deleteWorkflowProcess, WorkflowProcessesProps } from "../_actions";
 import { WorkflowProcessForm } from "./workflow-process-form";
 import { PresentationStatusBadge } from "@components/presentation-badge";
 import { PreviewProcess } from "../../../../processes/_components/preview-process";
-import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
-import { ActionIconAction } from "@components/action-icon-action";
 
 export const WorkflowProcessesTable = ({
   processes,
