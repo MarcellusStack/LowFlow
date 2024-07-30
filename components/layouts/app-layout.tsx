@@ -4,6 +4,7 @@ import { Breadcrumb } from "@components/breadcrumb";
 import { UserButton } from "@components/user-button";
 import { AppShell, Button, Flex, Loader, Stack } from "@mantine/core";
 import {
+  IconArrowBigRightLines,
   IconArrowsRandom,
   IconArrowsShuffle,
   IconLayoutDashboard,
@@ -38,6 +39,12 @@ export const navLinks: NavLinkProps[] = [
     href: "/processes",
     icon: <IconArrowsShuffle stroke={1.5} />,
     label: "Processes",
+  },
+  {
+    id: "nav-3X5R2J5YX7",
+    href: "/runs",
+    icon: <IconArrowBigRightLines stroke={1.5} />,
+    label: "Runs",
   },
 ];
 
