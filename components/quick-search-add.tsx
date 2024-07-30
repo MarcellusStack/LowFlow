@@ -9,14 +9,11 @@ import { modals } from "@mantine/modals";
 import { usePathname } from "next/navigation";
 
 export type QuickSearchAddProps = {
-  title: string;
-  content: ReactNode;
+  title?: string;
+  content?: ReactNode;
 };
 
-export const QuickSearchAdd = ({
-  title,
-  content,
-}: QuickSearchAddProps) => {
+export const QuickSearchAdd = ({ title, content }: QuickSearchAddProps) => {
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
@@ -44,34 +41,38 @@ export const QuickSearchAdd = ({
           placeholder="Suche"
           className="w-full"
         />
-        <Button
-          color="black"
-          visibleFrom="sm"
-          className="shrink-0"
-          leftSection={<IconPlus size={14} />}
-          onClick={() => {
-            modals.open({
-              title: title,
-              children: <>{content}</>,
-            });
-          }}
-        >
-          Create
-        </Button>
-        <ActionIcon
-          color="black"
-          hiddenFrom="sm"
-          size="lg"
-          onClick={() => {
-            modals.open({
-              title: title,
-              children: <>{content}</>,
-            });
-          }}
-          aria-label="Add"
-        >
-          <IconPlus style={{ width: "70%", height: "70%" }} stroke={1.5} />
-        </ActionIcon>
+        {content && (
+          <>
+            <Button
+              color="black"
+              visibleFrom="sm"
+              className="shrink-0"
+              leftSection={<IconPlus size={14} />}
+              onClick={() => {
+                modals.open({
+                  title: title,
+                  children: <>{content}</>,
+                });
+              }}
+            >
+              Create
+            </Button>
+            <ActionIcon
+              color="black"
+              hiddenFrom="sm"
+              size="lg"
+              onClick={() => {
+                modals.open({
+                  title: title,
+                  children: <>{content}</>,
+                });
+              }}
+              aria-label="Add"
+            >
+              <IconPlus style={{ width: "70%", height: "70%" }} stroke={1.5} />
+            </ActionIcon>
+          </>
+        )}
       </Group>
     </>
   );
