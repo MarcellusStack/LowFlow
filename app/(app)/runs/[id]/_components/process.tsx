@@ -1,4 +1,5 @@
 "use client";
+import { ButtonAction } from "@components/button-action";
 import {
   ActionIcon,
   Button,
@@ -20,6 +21,7 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { resetRun } from "../[processRunId]/_actions";
 
 export type ProcessProps = {
   process: ProcessStatus;
@@ -66,12 +68,19 @@ export const Process = ({
           color={handleProcessColor(process)}
           onClick={() => {
             modals.open({
-              title: `${title} in Bearbeitung setzen`,
+              title: `Reset ${title}`,
               children: (
                 <>
-                  <Button fullWidth color="black" variant="filled">
+                  <ButtonAction
+                    values={{ processRunId: id }}
+                    action={resetRun}
+                    hideModals={true}
+                    fullWidth
+                    color="yellow"
+                    variant="filled"
+                  >
                     Reset Process
-                  </Button>
+                  </ButtonAction>
                 </>
               ),
             });

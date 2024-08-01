@@ -5,6 +5,6 @@ export const updateRunSchema = z.object({
   data: z.any(),
 });
 
-export const completeRunSchema = z.object({
+export const runSchema = z.object({
   processRunId: z.string().min(1),
 });
