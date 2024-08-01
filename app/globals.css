@@ -27,10 +27,12 @@ body {
   --primary: black;
 }
 
-
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.process-divider {
+  align-self: center !important;
 }

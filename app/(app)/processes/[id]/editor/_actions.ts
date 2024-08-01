@@ -34,7 +34,7 @@ export const updateProcessEditor = authedProcedure
   .handler(async ({ input, ctx }) => {
     try {
       const { user } = ctx;
-      console.log(input);
+      
 
       await prisma.process.update({
         where: {

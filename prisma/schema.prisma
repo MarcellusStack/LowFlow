@@ -89,7 +89,7 @@ model ProcessRun {
 model Submission {
   id             String       @id @default(uuid())
   processRunId   String
-  data           Json
+  data           Json?
   processRun     ProcessRun   @relation(fields: [processRunId], references: [id], onDelete: Cascade)
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
