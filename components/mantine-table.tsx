@@ -2,6 +2,7 @@ import { Button, Group, Stack } from "@mantine/core";
 import {
   DataTable,
   DataTableColumn,
+  DataTableRowExpansionProps,
   useDataTableColumns,
 } from "mantine-datatable";
 import React from "react";
@@ -20,6 +21,7 @@ type MantineTableProps<T> = {
     footer?: string;
     pagination?: string;
   };
+  rowExpansion?: DataTableRowExpansionProps<T> | undefined;
 };
 
 export const MantineTable = <T,>({
@@ -29,6 +31,7 @@ export const MantineTable = <T,>({
   height,
   minHeightRecords,
   hideColumnsToggle = false,
+  rowExpansion,
 }: MantineTableProps<T>) => {
   const {
     effectiveColumns,
@@ -53,6 +56,7 @@ export const MantineTable = <T,>({
         storeColumnsKey={storeKey}
         columns={effectiveColumns}
         records={records}
+        rowExpansion={rowExpansion}
       />
       {hideColumnsToggle ? null : (
         <Group justify="right">

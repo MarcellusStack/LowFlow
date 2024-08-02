@@ -6,8 +6,10 @@ import { deleteRun, RunsProps } from "../_actions";
 import { ProcessStatusBadge } from "@components/process-status-badge";
 import { DeleteActionIcon } from "@components/delete-action-icon";
 import { ViewActionIcon } from "@components/view-action-icon";
+import { useState } from "react";
 
 export const RunsTable = ({ runs }: { runs: RunsProps }) => {
+  const [expandedRunIds, setExpandedRunIds] = useState<string[]>([]);
   return (
     <MantineTable
       records={runs || []}
@@ -42,6 +44,14 @@ export const RunsTable = ({ runs }: { runs: RunsProps }) => {
         },
       ]}
       storeKey="runs-table"
+      rowExpansion={{
+        allowMultiple: true,
+        expanded: {
+          recordIds: expandedRunIds,
+          onRecordIdsChange: setExpandedRunIds,
+        },
+        content: (run) => <h1>Test</h1>,
+      }}
     />
   );
 };
