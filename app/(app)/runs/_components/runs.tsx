@@ -2,6 +2,8 @@
 import React from "react";
 import { getRuns } from "../_actions";
 import { RunsTable } from "./runs-table";
+import { RunDataTable } from "./run-data-table";
+import { TestDataTable } from "./run-data-table";
 
 export const Runs = async ({
   searchParams,
@@ -9,5 +11,11 @@ export const Runs = async ({
   searchParams: Record<string, any> | null | undefined;
 }) => {
   const runs = (await getRuns(searchParams)) ?? [];
-  return <RunsTable runs={runs} />;
+  console.log(runs);
+
+  return (
+    <>
+      <RunsTable runs={runs} />
+    </>
+  );
 };

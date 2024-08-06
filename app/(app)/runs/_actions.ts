@@ -6,7 +6,6 @@ import { authedProcedure } from "@server/utils/procedures";
 import { createRunSchema } from "./_schemas";
 import { authFilterQuery } from "@server/utils/query-clients";
 import { deleteSchema } from "@schemas/index";
-import { z } from "zod";
 
 export const getRuns = authFilterQuery(async (user, search) => {
   return await prisma.workflowRun.findMany({
@@ -18,6 +17,21 @@ export const getRuns = authFilterQuery(async (user, search) => {
       workflow: {
         select: {
           name: true,
+          processes: {
+            select: {
+              id: true,
+              fields: true,
+              processRuns: {
+                select: {
+                  submission: {
+                    select: {
+                      data: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       },
       status: true,

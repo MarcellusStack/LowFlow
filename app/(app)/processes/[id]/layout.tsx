@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { SubLayout } from "@components/layouts/sub-layout";
 import {
   IconAlertTriangle,
+  IconArrowBigRightLines,
   IconInfoSquare,
   IconTemplate,
 } from "@tabler/icons-react";
@@ -35,6 +36,11 @@ export default async function Layout({
           value: `editor`,
           icon: <IconTemplate size={16} stroke={1.5} />,
           label: "Editor",
+        },
+        {
+          value: `runs`,
+          icon: <IconArrowBigRightLines size={16} stroke={1.5} />,
+          label: "Runs",
         },
         {
           value: `danger`,
