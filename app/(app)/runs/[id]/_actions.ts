@@ -79,8 +79,6 @@ export const completeRun = authedProcedure
             (processRun) => processRun.status === "completed"
           );
 
-          console.log(allProcessRunsCompleted, "second check");
-
           if (!allProcessRunsCompleted) {
             const incompleteProcessRuns = run.processRuns.filter(
               (processRun) => processRun.status !== "completed"
