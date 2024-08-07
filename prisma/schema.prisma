@@ -26,6 +26,22 @@ model Organization {
   workflowRuns WorkflowRun[]
   processRuns  ProcessRun[]
   submissions  Submission[]
+  n8nWorkflows N8nWorkflow[]
+}
+
+model N8nWorkflow {
+  id             String       @id @default(uuid())
+  name           String
+  description    String?
+  workflowId     String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  workflows      Workflow[]
+  processes      Process[]
+
+  @@unique([organizationId, workflowId])
 }
 
 model Workflow {
@@ -37,6 +53,7 @@ model Workflow {
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
   workflowRuns   WorkflowRun[]
+  n8nWorkflows   N8nWorkflow[]
   organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 }
@@ -47,7 +64,6 @@ model Process {
   name           String
   description    String?
   status         PresentationStatus @default(public)
-  n8nWorkflowIds String[]
   fields         Json?
   order          Float              @default(10)
   workflow       Workflow           @relation(fields: [workflowId], references: [id], onDelete: Cascade)
@@ -56,6 +72,7 @@ model Process {
   processRuns    ProcessRun[]
   organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
+  n8nWorkflows   N8nWorkflow[]
 }
 
 model WorkflowRun {
