@@ -1,8 +1,10 @@
-import { Grid, GridCol, Stack, Title, Text } from "@mantine/core";
+import { Grid, GridCol, Stack, Title, Text, Alert, Flex } from "@mantine/core";
 import { Process } from "./_components/process";
 import { notFound } from "next/navigation";
-import { getWorkflowRun } from "./_actions";
+import { archiveRun, completeRun, getWorkflowRun } from "./_actions";
 import { ProcessStatusBadge } from "@components/process-status-badge";
+import { ButtonModal } from "@components/button-modal";
+import { ButtonAction } from "@components/button-action";
 
 export default async function Layout({
   params,
@@ -27,7 +29,20 @@ export default async function Layout({
         <ProcessStatusBadge status={workflowRun.status} />
         <Title order={2}>{workflowRun.workflow.name}</Title>
         <Text c="dimmed">{workflowRun.workflow.description}</Text>
-        {children}
+        {workflowRun.status === "completed" && (
+          <Alert variant="light" color="green" title="Success">
+            Workflow completed
+          </Alert>
+        )}
+
+        {workflowRun.status === "archived" && (
+          <Alert variant="light" color="gray" title="Archived">
+            Workflow archived
+          </Alert>
+        )}
+
+        {workflowRun.status !== "completed" &&
+          workflowRun.status !== "archived" && <>{children}</>}
       </GridCol>
       <GridCol span={{ base: 12, xs: 6, sm: 6, md: 6, lg: 4, xl: 4 }}>
         <Stack gap="xs">
@@ -41,6 +56,38 @@ export default async function Layout({
               id={process.id}
             />
           ))}
+          <Flex gap="xs">
+            <ButtonModal
+              content={
+                <ButtonAction
+                  color="green"
+                  hideModals={true}
+                  action={completeRun}
+                  values={{ workflowRunId: id }}
+                >
+                  Complete
+                </ButtonAction>
+              }
+              color="green"
+            >
+              Complete
+            </ButtonModal>
+            <ButtonModal
+              color="gray"
+              content={
+                <ButtonAction
+                  color="gray"
+                  hideModals={true}
+                  action={archiveRun}
+                  values={{ workflowRunId: id }}
+                >
+                  Archive
+                </ButtonAction>
+              }
+            >
+              Archive
+            </ButtonModal>
+          </Flex>
         </Stack>
       </GridCol>
     </Grid>

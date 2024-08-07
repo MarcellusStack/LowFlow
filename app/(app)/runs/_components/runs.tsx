@@ -11,7 +11,6 @@ export const Runs = async ({
   searchParams: Record<string, any> | null | undefined;
 }) => {
   const runs = (await getRuns(searchParams)) ?? [];
-  console.log(runs);
 
   return (
     <>

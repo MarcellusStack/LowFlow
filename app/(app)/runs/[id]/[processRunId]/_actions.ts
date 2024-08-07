@@ -4,7 +4,7 @@ import prisma from "@server/db";
 import { authedProcedure } from "@server/utils/procedures";
 import { authFilterQuery } from "@server/utils/query-clients";
 import { revalidatePath } from "next/cache";
-import { completeRunSchema, runSchema, updateRunSchema } from "./_schema";
+import { runSchema, updateRunSchema } from "./_schema";
 
 export const getProcessRun = authFilterQuery(async (user, search) => {
   return await prisma.processRun.findUnique({
