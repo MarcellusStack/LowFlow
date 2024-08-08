@@ -8,6 +8,7 @@ import {
   IconArrowsRandom,
   IconArrowsShuffle,
   IconLayoutDashboard,
+  IconShare,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -45,6 +46,12 @@ export const navLinks: NavLinkProps[] = [
     href: "/runs",
     icon: <IconArrowBigRightLines stroke={1.5} />,
     label: "Runs",
+  },
+  {
+    id: "nav-4X5R2J5YX7",
+    href: "/n8ns",
+    icon: <IconShare stroke={1.5} />,
+    label: "N8ns",
   },
 ];
 

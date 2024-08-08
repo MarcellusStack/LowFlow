@@ -31,7 +31,7 @@ model Organization {
 
 model N8nWorkflow {
   id             String       @id @default(uuid())
-  name           String
+  name           String       @unique
   description    String?
   workflowId     String       @unique
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
