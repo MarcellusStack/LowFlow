@@ -40,7 +40,11 @@ export const getProcesses = cache(
             name: true,
           },
         },
-        n8nWorkflowIds: true,
+        n8nWorkflows: {
+          select: {
+            id: true,
+          },
+        },
         fields: true,
       },
     });

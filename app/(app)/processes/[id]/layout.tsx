@@ -4,6 +4,7 @@ import {
   IconAlertTriangle,
   IconArrowBigRightLines,
   IconInfoSquare,
+  IconShare,
   IconTemplate,
 } from "@tabler/icons-react";
 import { getProcess } from "./_actions";
@@ -41,6 +42,11 @@ export default async function Layout({
           value: `runs`,
           icon: <IconArrowBigRightLines size={16} stroke={1.5} />,
           label: "Runs",
+        },
+        {
+          value: `n8n`,
+          icon: <IconShare size={16} stroke={1.5} />,
+          label: "n8n´s",
         },
         {
           value: `danger`,

@@ -1,5 +1,5 @@
 "use client";
-import { ActionIcon, Group, Text } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 import { MantineTable } from "@components/mantine-table";
 import { tableColumnProps } from "@constants/index";
 import { ViewActionIcon } from "@components/view-action-icon";
@@ -9,7 +9,6 @@ import { deleteProcess, ProcessesProps } from "../_actions";
 import { PresentationStatusBadge } from "@components/presentation-badge";
 import { ProcessForm } from "./process-form";
 import { PreviewProcess } from "./preview-process";
-import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 
 export const ProcessesTable = ({
   processes,
@@ -42,10 +41,10 @@ export const ProcessesTable = ({
           ...tableColumnProps,
         },
         {
-          accessor: "n8nWorkflowIds",
+          accessor: "n8nWorkflows",
           title: "n8n Workflows",
-          render: ({ n8nWorkflowIds }) => (
-            <Text size="sm">{n8nWorkflowIds.length}</Text>
+          render: ({ n8nWorkflows }) => (
+            <Text size="sm">{n8nWorkflows.length}</Text>
           ),
           ...tableColumnProps,
         },
@@ -66,7 +65,6 @@ export const ProcessesTable = ({
                 entity="Process"
               />
               <PreviewProcess json={process.fields} />
-              
             </Group>
           ),
           ...tableColumnProps,
