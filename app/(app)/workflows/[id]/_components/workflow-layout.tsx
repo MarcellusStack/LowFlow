@@ -7,6 +7,7 @@ import {
   IconArrowBigRightLines,
   IconArrowsShuffle,
   IconInfoSquare,
+  IconShare,
 } from "@tabler/icons-react";
 import { useSearchParams } from "next/navigation";
 import { SecondaryHeading } from "@components/secondary-heading";
@@ -45,6 +46,11 @@ export const WorkflowLayout = ({
               value: `runs`,
               icon: <IconArrowBigRightLines size={16} stroke={1.5} />,
               label: "Runs",
+            },
+            {
+              value: `n8n`,
+              icon: <IconShare size={16} stroke={1.5} />,
+              label: "n8n´s",
             },
             {
               value: `danger`,
