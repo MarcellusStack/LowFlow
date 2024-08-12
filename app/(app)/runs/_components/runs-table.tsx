@@ -10,7 +10,7 @@ import { ViewActionIcon } from "@components/view-action-icon";
 export const RunsTable = ({ runs }: { runs: RunsProps }) => {
   return (
     <MantineTable
-      records={runs || []}
+      records={runs}
       columns={[
         {
           accessor: "id",
