@@ -34,7 +34,6 @@ export const getWorkflowRun = cache(
                 name: true,
                 description: true,
                 fields: true,
-                n8nWorkflowIds: true,
               },
             },
           },
@@ -66,6 +65,21 @@ export const completeRun = authedProcedure
                 select: {
                   id: true,
                   status: true,
+                  submission: {
+                    select: {
+                      data: true,
+                    },
+                  },
+                },
+              },
+              workflow: {
+                select: {
+                  id: true,
+                  n8nWorkflows: {
+                    select: {
+                      name: true,
+                    },
+                  },
                 },
               },
             },
@@ -110,6 +124,32 @@ export const completeRun = authedProcedure
 
             revalidatePath(`/(app)/runs/${run.workflowRunId}`, "page");
             return { message: `Not all process runs are completed` };
+          }
+
+          if (run.workflow.n8nWorkflows.length > 0) {
+            const combinedSubmissionData = run.processRuns.map(
+              (processRun) => processRun.submission.data
+            );
+            console.log(combinedSubmissionData);
+
+            await Promise.all(
+              run.workflow.n8nWorkflows.map(async (workflow) => {
+                const url = `${process.env.NEXT_PUBLIC_N8N_URL}/webhook/${workflow.name}`;
+
+                const response = await fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-N8N-WEBHOOK-API-KEY": process.env.N8N_API_KEY as string,
+                  },
+                  body: JSON.stringify(combinedSubmissionData),
+                });
+
+                if (!response.ok) {
+                  throw new Error(`Failed to send data to ${workflow.name}`);
+                }
+              })
+            );
           }
 
           await tx.workflowRun.update({

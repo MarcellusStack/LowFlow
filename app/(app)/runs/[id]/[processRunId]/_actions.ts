@@ -54,6 +54,16 @@ export const updateRun = authedProcedure
               submission: {
                 select: {
                   id: true,
+                  data: true,
+                },
+              },
+              process: {
+                select: {
+                  n8nWorkflows: {
+                    select: {
+                      name: true,
+                    },
+                  },
                 },
               },
             },
@@ -130,10 +140,43 @@ export const completeRun = authedProcedure
               submission: {
                 select: {
                   id: true,
+                  data: true,
+                },
+              },
+              process: {
+                select: {
+                  n8nWorkflows: {
+                    select: {
+                      name: true,
+                    },
+                  },
                 },
               },
             },
           });
+
+          if (run.process.n8nWorkflows.length > 0) {
+            const submissionData = run.submission.data;
+
+            await Promise.all(
+              run.process.n8nWorkflows.map(async (workflow) => {
+                const url = `${process.env.NEXT_PUBLIC_N8N_URL}/webhook/${workflow.name}`;
+
+                const response = await fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-N8N-WEBHOOK-API-KEY": process.env.N8N_API_KEY as string,
+                  },
+                  body: JSON.stringify(submissionData),
+                });
+
+                if (!response.ok) {
+                  throw new Error(`Failed to send data to ${workflow.name}`);
+                }
+              })
+            );
+          }
 
           await tx.processRun.update({
             where: {
