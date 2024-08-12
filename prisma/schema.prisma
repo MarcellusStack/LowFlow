@@ -27,6 +27,32 @@ model Organization {
   processRuns  ProcessRun[]
   submissions  Submission[]
   n8nWorkflows N8nWorkflow[]
+  permissions  Permission[]
+}
+
+model Permission {
+  id             String       @id @default(uuid())
+  name           String       @unique
+  description    String?
+  workflows      Workflow[]
+  processes      Process[]
+  users          User[]
+  createWorkflow Boolean      @default(false)
+  readWorkflow   Boolean      @default(false)
+  updateWorkflow Boolean      @default(false)
+  deleteWorkflow Boolean      @default(false)
+  createProcess  Boolean      @default(false)
+  readProcess    Boolean      @default(false)
+  updateProcess  Boolean      @default(false)
+  deleteProcess  Boolean      @default(false)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([name, organizationId])
+  @@index([id, organizationId])
+  @@index(organizationId)
 }
 
 model N8nWorkflow {
@@ -56,6 +82,7 @@ model Workflow {
   n8nWorkflows   N8nWorkflow[]
   organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
+  permissions    Permission[]
 }
 
 model Process {
@@ -73,6 +100,8 @@ model Process {
   organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
   n8nWorkflows   N8nWorkflow[]
+  permission     Permission?        @relation(fields: [permissionId], references: [id])
+  permissionId   String?
 }
 
 model WorkflowRun {
@@ -131,20 +160,20 @@ enum ProcessStatus {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  firstName     String?
-  lastName      String?
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-
+  id             String        @id @default(cuid())
+  firstName      String?
+  lastName       String?
+  name           String?
+  email          String        @unique
+  emailVerified  DateTime?
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
+  permissions    Permission[]
 }
 
 model Account {

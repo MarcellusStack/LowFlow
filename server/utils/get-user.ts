@@ -11,6 +11,22 @@ export const getUser = async (id: string) => {
       organization: {
         select: { id: true, name: true },
       },
+      permissions: {
+        select: {
+          readWorkflow: true,
+          readProcess: true,
+          workflows: {
+            select: {
+              id: true,
+            },
+          },
+          processes: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -20,6 +36,7 @@ export const getUser = async (id: string) => {
     lastName: user?.lastName || null,
     organizationName: user?.organization?.name || null,
     organizationId: user?.organization?.id || null,
+    permissions: user?.permissions || [],
   };
 };
 

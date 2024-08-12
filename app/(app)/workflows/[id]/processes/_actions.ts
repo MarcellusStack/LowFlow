@@ -42,7 +42,7 @@ export const getWorkflowProcesses = cache(
         description: true,
         status: true,
         workflowId: true,
-        n8nWorkflowIds: true,
+
         fields: true,
       },
     });
@@ -137,5 +137,3 @@ export const deleteWorkflowProcess = authedProcedure
 
     return { message: `Deleted Process` };
   });
-
-

@@ -8,10 +8,19 @@ import { cache } from "react";
 import { updateWorkflowSchema } from "./_schemas";
 import { PresentationStatus } from "@prisma/client";
 import { deleteSchema } from "@schemas/index";
-import { redirect } from "next/navigation";
+import { getReadPermissions } from "@utils/get-read-permissions";
 
 export const getWorkflow = cache(
   authFilterQuery(async (user, search) => {
+    const { canReadAll, specificEntityIds } = getReadPermissions(
+      user,
+      "workflow"
+    );
+
+    if (!canReadAll && !specificEntityIds.includes(search.id)) {
+      throw new Error("You do not have permission to view this workflow.");
+    }
+
     return await prisma.workflow.findUnique({
       where: {
         id: search.id,

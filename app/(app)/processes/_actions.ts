@@ -9,47 +9,64 @@ import { z } from "zod";
 import { PresentationStatus } from "@prisma/client";
 import { deleteSchema } from "@schemas/index";
 import { cache } from "react";
+import { getReadPermissions } from "@utils/get-read-permissions";
 
-export const getProcesses = cache(
-  authFilterQuery(async (user, search) => {
-    return await prisma.process.findMany({
-      where: {
-        organizationId: user.organizationId,
-        ...(search.search
-          ? {
-              OR: [
-                { name: { contains: search.search, mode: "insensitive" } },
-                {
-                  description: {
-                    contains: search.search,
-                    mode: "insensitive",
+export const getProcesses = authFilterQuery(async (user, search) => {
+  // Determine if the user can read all processes or specific ones
+  const { canReadAll, specificEntityIds } = getReadPermissions(user, "process");
+
+  return await prisma.process.findMany({
+    where: {
+      organizationId: user.organizationId,
+      ...(search.search
+        ? {
+            OR: [
+              { name: { contains: search.search, mode: "insensitive" } },
+              {
+                description: {
+                  contains: search.search,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          }
+        : {}),
+      AND: [
+        {
+          OR: [
+            // Case 1: User can read all processes
+            canReadAll
+              ? {}
+              : {
+                  // Case 2: User can read specific processes
+                  id: {
+                    in: specificEntityIds,
                   },
                 },
-              ],
-            }
-          : {}),
-      },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        status: true,
-        workflow: {
-          select: {
-            id: true,
-            name: true,
-          },
+          ],
         },
-        n8nWorkflows: {
-          select: {
-            id: true,
-          },
+      ],
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      status: true,
+      workflow: {
+        select: {
+          id: true,
+          name: true,
         },
-        fields: true,
       },
-    });
-  })
-);
+      n8nWorkflows: {
+        select: {
+          id: true,
+        },
+      },
+      fields: true,
+    },
+  });
+});
 
 export type ProcessesProps = NonNullable<
   Awaited<ReturnType<typeof getProcesses>>

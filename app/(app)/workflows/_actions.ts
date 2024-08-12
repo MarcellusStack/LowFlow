@@ -5,8 +5,15 @@ import prisma from "@server/db";
 import { authedProcedure } from "@server/utils/procedures";
 import { createWorkflowSchema } from "./_schemas";
 import { authFilterQuery } from "@server/utils/query-clients";
+import { getReadPermissions } from "@utils/get-read-permissions";
 
 export const getWorkflows = authFilterQuery(async (user, search) => {
+  // Determine if the user can read all workflows or specific ones
+  const { canReadAll, specificEntityIds } = getReadPermissions(
+    user,
+    "workflow"
+  );
+
   return await prisma.workflow.findMany({
     where: {
       organizationId: user.organizationId,
@@ -23,6 +30,21 @@ export const getWorkflows = authFilterQuery(async (user, search) => {
             ],
           }
         : {}),
+      AND: [
+        {
+          OR: [
+            // Case 1: User can read all workflows
+            canReadAll
+              ? {}
+              : {
+                  // Case 2: User can read specific workflows
+                  id: {
+                    in: specificEntityIds,
+                  },
+                },
+          ],
+        },
+      ],
     },
     select: {
       id: true,
