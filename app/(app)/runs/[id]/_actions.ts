@@ -130,7 +130,6 @@ export const completeRun = authedProcedure
             const combinedSubmissionData = run.processRuns.map(
               (processRun) => processRun.submission.data
             );
-            console.log(combinedSubmissionData);
 
             await Promise.all(
               run.workflow.n8nWorkflows.map(async (workflow) => {
