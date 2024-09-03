@@ -56,7 +56,7 @@ export const createWorkflowRun = authedProcedure
             throw new Error("Workflow not found or has no processes");
           }
 
-          await tx.workflowRun.create({
+          const processRuns = await tx.workflowRun.create({
             data: {
               workflow: {
                 connect: {
@@ -75,6 +75,20 @@ export const createWorkflowRun = authedProcedure
                 })),
               },
             },
+            select: {
+              processRuns: {
+                select: {
+                  id: true,
+                },
+              },
+            },
+          });
+
+          await tx.submission.createMany({
+            data: processRuns.processRuns.map((processRun) => ({
+              organizationId: user.organizationId,
+              processRunId: processRun.id,
+            })),
           });
         },
         {
