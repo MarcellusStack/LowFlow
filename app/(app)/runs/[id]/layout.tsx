@@ -1,7 +1,7 @@
 import { Grid, GridCol, Stack, Title, Text, Alert, Flex } from "@mantine/core";
 import { Process } from "./_components/process";
 import { notFound } from "next/navigation";
-import { archiveRun, completeRun, getWorkflowRun } from "./_actions";
+import { archiveRun, completeRun, getWorkflowRun, resetRun } from "./_actions";
 import { ProcessStatusBadge } from "@components/process-status-badge";
 import { ButtonModal } from "@components/button-modal";
 import { ButtonAction } from "@components/button-action";
@@ -57,21 +57,40 @@ export default async function Layout({
             />
           ))}
           <Flex gap="xs">
-            <ButtonModal
-              content={
-                <ButtonAction
-                  color="green"
-                  hideModals={true}
-                  action={completeRun}
-                  values={{ workflowRunId: id }}
-                >
-                  Complete
-                </ButtonAction>
-              }
-              color="green"
-            >
-              Complete
-            </ButtonModal>
+            {workflowRun.status === "ongoing" && (
+              <ButtonModal
+                content={
+                  <ButtonAction
+                    color="green"
+                    hideModals={true}
+                    action={completeRun}
+                    values={{ workflowRunId: id }}
+                  >
+                    Complete
+                  </ButtonAction>
+                }
+                color="green"
+              >
+                Complete
+              </ButtonModal>
+            )}
+            {workflowRun.status === "completed" && (
+              <ButtonModal
+                color="yellow"
+                content={
+                  <ButtonAction
+                    color="yellow"
+                    hideModals={true}
+                    action={resetRun}
+                    values={{ workflowRunId: id }}
+                  >
+                    Reset
+                  </ButtonAction>
+                }
+              >
+                Reset
+              </ButtonModal>
+            )}
             <ButtonModal
               color="gray"
               content={

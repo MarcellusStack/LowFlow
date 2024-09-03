@@ -60,7 +60,7 @@ export const completeRun = authedProcedure
               organizationId: user.organizationId,
               status: {
                 notIn: ["completed", "archived"],
-              }
+              },
             },
             select: {
               id: true,
@@ -176,6 +176,71 @@ export const completeRun = authedProcedure
     revalidatePath(`/(app)/runs/${input.workflowRunId}`, "page");
 
     return { message: `Completed Run` };
+  });
+
+export const resetRun = authedProcedure
+  .createServerAction()
+  .input(z.object({ workflowRunId: z.string() }))
+  .handler(async ({ input, ctx }) => {
+    const { user } = ctx;
+
+    try {
+      await prisma.$transaction(
+        async (tx) => {
+          await tx.workflowRun.findUnique({
+            where: {
+              id: input.workflowRunId,
+              organizationId: user.organizationId,
+              status: "completed",
+            },
+            select: {
+              id: true,
+              processRuns: {
+                select: {
+                  id: true,
+                  status: true,
+                  submission: {
+                    select: {
+                      data: true,
+                    },
+                  },
+                },
+              },
+              workflow: {
+                select: {
+                  id: true,
+                  n8nWorkflows: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+          await tx.workflowRun.update({
+            where: {
+              id: input.workflowRunId,
+              organizationId: user.organizationId,
+            },
+            data: {
+              status: "ongoing",
+            },
+          });
+        },
+        {
+          maxWait: 15000,
+          timeout: 15000,
+        }
+      );
+    } catch (error) {
+      throw new Error(`There was an error please try again ${error.message}`);
+    }
+
+    revalidatePath(`/(app)/runs/${input.workflowRunId}`, "page");
+
+    return { message: `Reset Workflow Run` };
   });
 
 export const archiveRun = authedProcedure
