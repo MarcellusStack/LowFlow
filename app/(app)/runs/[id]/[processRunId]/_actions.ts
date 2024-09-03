@@ -219,6 +219,11 @@ export const resetRun = authedProcedure
               id: input.processRunId,
               organizationId: user.organizationId,
               status: "completed",
+              workflowRun: {
+                status: {
+                  notIn: ["completed", "archived"],
+                },
+              },
             },
             select: {
               workflowRunId: true,
