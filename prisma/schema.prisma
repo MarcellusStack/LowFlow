@@ -71,9 +71,10 @@ model N8nWorkflow {
 }
 
 model Workflow {
-  id             String             @id @default(uuid())
-  name           String
-  description    String?
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+
   status         PresentationStatus @default(public)
   processes      Process[]
   createdAt      DateTime           @default(now())
@@ -92,7 +93,7 @@ model Process {
   description    String?
   status         PresentationStatus @default(public)
   fields         Json?
-  order          Float              @default(10)
+  order          Int
   workflow       Workflow           @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt

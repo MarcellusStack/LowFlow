@@ -64,11 +64,27 @@ export const createWorkflowProcesses = authedProcedure
     try {
       const { user } = ctx;
 
+      // Query the existing processes to determine the maximum order value
+      const maxOrderProcess = await prisma.process.findFirst({
+        where: {
+          workflowId: input.workflowId,
+        },
+        orderBy: {
+          order: "desc",
+        },
+        select: {
+          order: true,
+        },
+      });
+
+      const newOrder = maxOrderProcess ? maxOrderProcess.order + 1000 : 1000;
+
       await prisma.process.create({
         data: {
           name: input.name,
           description: input.description,
           status: input.status as PresentationStatus,
+          order: newOrder,
           workflow: {
             connect: {
               id: input.workflowId,
@@ -140,4 +156,127 @@ export const deleteWorkflowProcess = authedProcedure
     }
 
     return { message: `Deleted Process` };
+  });
+
+export const moveUp = authedProcedure
+  .createServerAction()
+  .input(z.object({ id: z.string().min(1) }))
+  .handler(async ({ input, ctx }) => {
+    try {
+      const { user } = ctx;
+
+      // Find the current process
+      const currentProcess = await prisma.process.findUnique({
+        where: { id: input.id, organizationId: user.organizationId },
+        select: {
+          id: true,
+          order: true,
+          workflowId: true,
+        },
+      });
+
+      if (!currentProcess) {
+        throw new Error("Process not found");
+      }
+
+      // Find the process immediately above the current process
+      const aboveProcess = await prisma.process.findFirst({
+        where: {
+          workflowId: currentProcess.workflowId,
+          organizationId: user.organizationId,
+          order: { lt: currentProcess.order },
+        },
+        orderBy: { order: "desc" },
+        select: {
+          id: true,
+          order: true,
+        },
+      });
+
+      if (!aboveProcess) {
+        throw new Error("No process above to move up");
+      }
+
+      // Swap the order values
+      await prisma.$transaction([
+        prisma.process.update({
+          where: { id: currentProcess.id },
+          data: { order: aboveProcess.order },
+        }),
+        prisma.process.update({
+          where: { id: aboveProcess.id },
+          data: { order: currentProcess.order },
+        }),
+      ]);
+
+      revalidatePath(
+        `/(app)/workflows/${currentProcess.workflowId}/processes`,
+        "page"
+      );
+    } catch (error) {
+      throw new Error(`There was an error please try again ${error.message}`);
+    }
+
+    return { message: `Moved Process Up` };
+  });
+export const moveDown = authedProcedure
+  .createServerAction()
+  .input(z.object({ id: z.string().min(1) }))
+  .handler(async ({ input, ctx }) => {
+    try {
+      const { user } = ctx;
+
+      // Find the current process
+      const currentProcess = await prisma.process.findUnique({
+        where: { id: input.id, organizationId: user.organizationId },
+        select: {
+          id: true,
+          order: true,
+          workflowId: true,
+        },
+      });
+
+      if (!currentProcess) {
+        throw new Error("Process not found");
+      }
+
+      // Find the process immediately below the current process
+      const belowProcess = await prisma.process.findFirst({
+        where: {
+          workflowId: currentProcess.workflowId,
+          organizationId: user.organizationId,
+          order: { gt: currentProcess.order },
+        },
+        orderBy: { order: "asc" },
+        select: {
+          id: true,
+          order: true,
+        },
+      });
+
+      if (!belowProcess) {
+        throw new Error("No process below to move down");
+      }
+
+      // Swap the order values
+      await prisma.$transaction([
+        prisma.process.update({
+          where: { id: currentProcess.id },
+          data: { order: belowProcess.order },
+        }),
+        prisma.process.update({
+          where: { id: belowProcess.id },
+          data: { order: currentProcess.order },
+        }),
+      ]);
+
+      revalidatePath(
+        `/(app)/workflows/${currentProcess.workflowId}/processes`,
+        "page"
+      );
+    } catch (error) {
+      throw new Error(`There was an error please try again ${error.message}`);
+    }
+
+    return { message: `Moved Process Down` };
   });

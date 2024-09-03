@@ -1,14 +1,21 @@
 "use client";
-import { Group, Text } from "@mantine/core";
+import { ActionIcon, Group, Text } from "@mantine/core";
 import { MantineTable } from "@components/mantine-table";
 import { tableColumnProps } from "@constants/index";
 import { ViewActionIcon } from "@components/view-action-icon";
 import { DeleteActionIcon } from "@components/delete-action-icon";
 import { UpdateModalActionIcon } from "@components/update-modal-action-icon";
-import { deleteWorkflowProcess, WorkflowProcessesProps } from "../_actions";
+import {
+  deleteWorkflowProcess,
+  moveDown,
+  moveUp,
+  WorkflowProcessesProps,
+} from "../_actions";
 import { WorkflowProcessForm } from "./workflow-process-form";
 import { PresentationStatusBadge } from "@components/presentation-badge";
 import { PreviewProcess } from "../../../../processes/_components/preview-process";
+import { ActionIconAction } from "@components/action-icon-action";
+import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 
 export const WorkflowProcessesTable = ({
   processes,
@@ -65,6 +72,26 @@ export const WorkflowProcessesTable = ({
                 entity="Process"
               />
               <PreviewProcess json={process.fields} />
+              <ActionIconAction
+                values={{ id: process.id }}
+                action={moveUp}
+                disabled={index === 0}
+              >
+                <IconArrowUp
+                  style={{ width: "70%", height: "70%" }}
+                  stroke={1.5}
+                />
+              </ActionIconAction>
+              <ActionIconAction
+                values={{ id: process.id }}
+                action={moveDown}
+                disabled={index === processes.length - 1}
+              >
+                <IconArrowDown
+                  style={{ width: "70%", height: "70%" }}
+                  stroke={1.5}
+                />
+              </ActionIconAction>
             </Group>
           ),
           ...tableColumnProps,
