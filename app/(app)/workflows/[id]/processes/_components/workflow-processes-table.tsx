@@ -36,10 +36,10 @@ export const WorkflowProcessesTable = ({
           ...tableColumnProps,
         },
         {
-          accessor: "n8nWorkflowIds",
+          accessor: "n8nWorkflows",
           title: "n8n Workflows",
-          render: ({ n8nWorkflowIds }) => (
-            <Text size="sm">{n8nWorkflowIds.length}</Text>
+          render: ({ n8nWorkflows }) => (
+            <Text size="sm">{n8nWorkflows.length}</Text>
           ),
           ...tableColumnProps,
         },
