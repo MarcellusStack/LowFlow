@@ -58,6 +58,9 @@ export const completeRun = authedProcedure
             where: {
               id: input.workflowRunId,
               organizationId: user.organizationId,
+              status: {
+                notIn: ["completed", "archived"],
+              }
             },
             select: {
               id: true,
