@@ -31,6 +31,7 @@ export const getWorkflow = cache(
         name: true,
         description: true,
         status: true,
+        approval: true,
       },
     });
   })
@@ -53,6 +54,7 @@ export const updateWorkflow = authedProcedure
           name: input.name,
           description: input.description,
           status: input.status as PresentationStatus,
+          approval: input.approval,
         },
       });
     } catch (error) {

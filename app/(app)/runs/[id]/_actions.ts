@@ -14,6 +14,7 @@ export const getWorkflowRun = cache(
         id: search.id,
         organizationId: user.organizationId,
       },
+
       select: {
         id: true,
         status: true,
@@ -24,6 +25,11 @@ export const getWorkflowRun = cache(
           },
         },
         processRuns: {
+          orderBy: {
+            process: {
+              order: "asc",
+            },
+          },
           select: {
             id: true,
             submission: true,

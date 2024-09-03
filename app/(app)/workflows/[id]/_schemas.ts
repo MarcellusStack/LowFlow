@@ -11,4 +11,5 @@ export const updateWorkflowSchema = z.object({
   status: z
     .string()
     .min(1, { message: generateErrorMessage("Status", zodRequiredError) }),
+  approval: z.boolean(),
 });

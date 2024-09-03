@@ -1,7 +1,14 @@
 "use client";
 import React from "react";
 import { useForm } from "@mantine/form";
-import { Button, Grid, Select, Textarea, TextInput } from "@mantine/core";
+import {
+  Button,
+  Checkbox,
+  Grid,
+  Select,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useEnhancedAction } from "@hooks/use-enhanced-action";
 import { updateWorkflow, WorkflowProps } from "../_actions";
@@ -22,6 +29,7 @@ export const GeneralWorkflowForm = ({
       name: workflow.name,
       description: workflow.description,
       status: workflow.status,
+      approval: workflow.approval,
     },
     validate: zodResolver(updateWorkflowSchema),
   });
@@ -58,6 +66,13 @@ export const GeneralWorkflowForm = ({
               key={form.key("status")}
               data={presentationStatus}
               {...form.getInputProps("status")}
+            />
+          </GridColumn>
+          <GridColumn column={4}>
+            <Checkbox
+              label="Approval"
+              key={form.key("approval")}
+              {...form.getInputProps("approval", { type: "checkbox" })}
             />
           </GridColumn>
         </Grid>

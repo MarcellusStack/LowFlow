@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useForm } from "@mantine/form";
-import { Button, Stack, Textarea, TextInput } from "@mantine/core";
+import { Button, Checkbox, Stack, Textarea, TextInput } from "@mantine/core";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useEnhancedAction } from "@hooks/use-enhanced-action";
 import { createWorkflowSchema } from "../_schemas";
@@ -13,6 +13,7 @@ export const CreateWorkflowForm = () => {
     initialValues: {
       name: "",
       description: "",
+      approval: false,
     },
     validate: zodResolver(createWorkflowSchema),
   });
@@ -38,6 +39,13 @@ export const CreateWorkflowForm = () => {
           label="Description"
           key={form.key("description")}
           {...form.getInputProps("description")}
+        />
+        <Checkbox
+          label="Approval"
+          key={form.key("description")}
+          {...form.getInputProps("description", {
+            type: "checkbox",
+          })}
         />
         <Button color="black" type="submit" loading={isPending}>
           Submit

@@ -41,6 +41,7 @@ export const updateRun = authedProcedure
 
       await prisma.$transaction(
         async (tx) => {
+          // Fetch the process run details along with workflow and previous process run details
           const run = await tx.processRun.findUnique({
             where: {
               id: input.processRunId,
@@ -51,6 +52,7 @@ export const updateRun = authedProcedure
             },
             select: {
               workflowRunId: true,
+              processId: true,
               submission: {
                 select: {
                   id: true,
@@ -59,6 +61,8 @@ export const updateRun = authedProcedure
               },
               process: {
                 select: {
+                  workflowId: true,
+                  order: true,
                   n8nWorkflows: {
                     select: {
                       name: true,
@@ -66,12 +70,71 @@ export const updateRun = authedProcedure
                   },
                 },
               },
+              workflowRun: {
+                select: {
+                  workflow: {
+                    select: {
+                      approval: true,
+                      processes: {
+                        orderBy: {
+                          order: "asc",
+                        },
+                        select: {
+                          id: true,
+                          order: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           });
 
+          if (!run) {
+            throw new Error(
+              "Process run not found or is in a completed/archived state."
+            );
+          }
+
+          const workflow = run.workflowRun.workflow;
+          const processes = workflow.processes;
+
+          // Check if approval is required and if the previous process has been completed
+          if (workflow.approval) {
+            const currentProcessIndex = processes.findIndex(
+              (p) => p.id === run.processId
+            );
+            if (currentProcessIndex > 0) {
+              const previousProcessId = processes[currentProcessIndex - 1].id;
+              const previousProcessRun = await tx.processRun.findUnique({
+                where: {
+                  workflowRunId_processId: {
+                    workflowRunId: run.workflowRunId,
+                    processId: previousProcessId,
+                  },
+                  organizationId: user.organizationId,
+                },
+                select: {
+                  status: true,
+                },
+              });
+
+              if (
+                !previousProcessRun ||
+                previousProcessRun.status !== "completed"
+              ) {
+                throw new Error(
+                  "Approval required: You must complete the previous process before updating this one."
+                );
+              }
+            }
+          }
+
+          // Update the workflow run and process run
           await tx.workflowRun.update({
             where: {
-              id: run?.workflowRunId,
+              id: run.workflowRunId,
               organizationId: user.organizationId,
             },
             data: {

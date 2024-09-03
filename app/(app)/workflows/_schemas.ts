@@ -7,4 +7,5 @@ export const createWorkflowSchema = z.object({
     .string()
     .min(1, { message: generateErrorMessage("Name", zodRequiredError) }),
   description: z.string(),
+  approval: z.boolean(),
 });

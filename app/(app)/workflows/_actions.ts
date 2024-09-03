@@ -70,6 +70,7 @@ export const createWorkflow = authedProcedure
         data: {
           name: input.name,
           description: input.description,
+          approval: input.approval,
           organization: { connect: { id: user.organizationId } },
         },
       });

@@ -71,10 +71,10 @@ model N8nWorkflow {
 }
 
 model Workflow {
-  id          String  @id @default(uuid())
-  name        String
-  description String?
-
+  id             String             @id @default(uuid())
+  name           String
+  description    String?
+  approval       Boolean            @default(false)
   status         PresentationStatus @default(public)
   processes      Process[]
   createdAt      DateTime           @default(now())

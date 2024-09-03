@@ -21,8 +21,6 @@ export default async function Layout({
     notFound();
   }
 
-  console.log(workflowRun);
-
   return (
     <Grid gutter="sm" flex={1}>
       <GridCol span={{ base: 12, xs: 6, sm: 6, md: 6, lg: 8, xl: 8 }}>
