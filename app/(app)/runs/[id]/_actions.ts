@@ -137,8 +137,9 @@ export const completeWorkflowRun = authedProcedure
           }
 
           if (run.workflow.n8nCompleteWorkflows.length > 0) {
-            const combinedSubmissionData = run.processRuns.map(
-              (processRun) => processRun.submission.data
+            const combinedSubmissionData = Object.assign(
+              {},
+              ...run.processRuns.map((processRun) => processRun.submission.data)
             );
 
             await Promise.all(
@@ -184,7 +185,7 @@ export const resetWorkflowRun = authedProcedure
     try {
       await prisma.$transaction(
         async (tx) => {
-          await tx.workflowRun.findUnique({
+          const run = await tx.workflowRun.findUnique({
             where: {
               id: input.workflowRunId,
               organizationId: user.organizationId,
@@ -206,7 +207,7 @@ export const resetWorkflowRun = authedProcedure
               workflow: {
                 select: {
                   id: true,
-                  n8nWorkflows: {
+                  n8nOngoingWorkflows: {
                     select: {
                       name: true,
                     },
@@ -215,6 +216,26 @@ export const resetWorkflowRun = authedProcedure
               },
             },
           });
+
+          if (!run || run.processRuns.length === 0) {
+            throw new Error("Workflow run not found or no process runs found");
+          }
+
+          if (run.workflow.n8nOngoingWorkflows.length > 0) {
+            const combinedSubmissionData = Object.assign(
+              {},
+              ...run.processRuns.map((processRun) => processRun.submission.data)
+            );
+
+            await Promise.all(
+              run.workflow.n8nOngoingWorkflows.map(async (workflow) => {
+                await callN8nWebhook({
+                  workflowName: workflow.name,
+                  submissionData: combinedSubmissionData,
+                });
+              })
+            );
+          }
 
           await tx.workflowRun.update({
             where: {
@@ -260,6 +281,21 @@ export const archiveWorkflowRun = authedProcedure
                 select: {
                   id: true,
                   status: true,
+                  submission: {
+                    select: {
+                      data: true,
+                    },
+                  },
+                },
+              },
+              workflow: {
+                select: {
+                  id: true,
+                  n8nArchiveWorkflows: {
+                    select: {
+                      name: true,
+                    },
+                  },
                 },
               },
             },
@@ -282,6 +318,26 @@ export const archiveWorkflowRun = authedProcedure
               })
             )
           );
+
+          if (!run || run.processRuns.length === 0) {
+            throw new Error("Workflow run not found or no process runs found");
+          }
+
+          if (run.workflow.n8nArchiveWorkflows.length > 0) {
+            const combinedSubmissionData = Object.assign(
+              {},
+              ...run.processRuns.map((processRun) => processRun.submission.data)
+            );
+
+            await Promise.all(
+              run.workflow.n8nArchiveWorkflows.map(async (workflow) => {
+                await callN8nWebhook({
+                  workflowName: workflow.name,
+                  submissionData: combinedSubmissionData,
+                });
+              })
+            );
+          }
 
           await tx.workflowRun.update({
             where: {
