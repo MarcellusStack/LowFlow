@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       <N8nArchivedWorkflowsTable
         workflowId={id}
-        n8ns={n8ns.n8nArchivedWorkflows || []}
+        n8ns={n8ns.n8nArchiveWorkflows || []}
       />
     </>
   );
