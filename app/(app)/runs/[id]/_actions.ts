@@ -6,6 +6,7 @@ import { cache } from "react";
 import { revalidatePath } from "next/cache";
 import { authedProcedure } from "@server/utils/procedures";
 import { z } from "zod";
+import { callN8nWebhook } from "@server/utils/call-n8n-webhook";
 
 export const getWorkflowRun = cache(
   authFilterQuery(async (user, search) => {
@@ -51,7 +52,7 @@ export const getWorkflowRun = cache(
 
 export type RunsProps = NonNullable<Awaited<ReturnType<typeof getWorkflowRun>>>;
 
-export const completeRun = authedProcedure
+export const completeWorkflowRun = authedProcedure
   .createServerAction()
   .input(z.object({ workflowRunId: z.string() }))
   .handler(async ({ input, ctx }) => {
@@ -142,20 +143,10 @@ export const completeRun = authedProcedure
 
             await Promise.all(
               run.workflow.n8nCompleteWorkflows.map(async (workflow) => {
-                const url = `${process.env.NEXT_PUBLIC_N8N_URL}/webhook/${workflow.name}`;
-
-                const response = await fetch(url, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    "X-N8N-WEBHOOK-API-KEY": process.env.N8N_API_KEY as string,
-                  },
-                  body: JSON.stringify(combinedSubmissionData),
+                await callN8nWebhook({
+                  workflowName: workflow.name,
+                  submissionData: combinedSubmissionData,
                 });
-
-                if (!response.ok) {
-                  throw new Error(`Failed to send data to ${workflow.name}`);
-                }
               })
             );
           }
@@ -184,7 +175,7 @@ export const completeRun = authedProcedure
     return { message: `Completed Run` };
   });
 
-export const resetRun = authedProcedure
+export const resetWorkflowRun = authedProcedure
   .createServerAction()
   .input(z.object({ workflowRunId: z.string() }))
   .handler(async ({ input, ctx }) => {
@@ -249,7 +240,7 @@ export const resetRun = authedProcedure
     return { message: `Reset Workflow Run` };
   });
 
-export const archiveRun = authedProcedure
+export const archiveWorkflowRun = authedProcedure
   .createServerAction()
   .input(z.object({ workflowRunId: z.string() }))
   .handler(async ({ input, ctx }) => {

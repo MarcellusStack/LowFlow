@@ -1,7 +1,7 @@
 import { Grid, GridCol, Stack, Title, Text, Alert, Flex } from "@mantine/core";
 import { Process } from "./_components/process";
 import { notFound } from "next/navigation";
-import { archiveRun, completeRun, getWorkflowRun, resetRun } from "./_actions";
+import { archiveRun, archiveWorkflowRun, completeRun, completeWorkflowRun, getWorkflowRun, resetRun, resetWorkflowRun } from "./_actions";
 import { ProcessStatusBadge } from "@components/process-status-badge";
 import { ButtonModal } from "@components/button-modal";
 import { ButtonAction } from "@components/button-action";
@@ -61,7 +61,7 @@ export default async function Layout({
                   <ButtonAction
                     color="green"
                     hideModals={true}
-                    action={completeRun}
+                    action={completeWorkflowRun}
                     values={{ workflowRunId: id }}
                   >
                     Complete
@@ -79,7 +79,7 @@ export default async function Layout({
                   <ButtonAction
                     color="yellow"
                     hideModals={true}
-                    action={resetRun}
+                    action={resetWorkflowRun}
                     values={{ workflowRunId: id }}
                   >
                     Reset
@@ -95,7 +95,7 @@ export default async function Layout({
                 <ButtonAction
                   color="gray"
                   hideModals={true}
-                  action={archiveRun}
+                  action={archiveWorkflowRun}
                   values={{ workflowRunId: id }}
                 >
                   Archive
