@@ -56,34 +56,38 @@ model Permission {
 }
 
 model N8nWorkflow {
-  id             String       @id @default(uuid())
-  name           String       @unique
-  description    String?
-  workflowId     String       @unique
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  workflows      Workflow[]
-  processes      Process[]
+  id                String       @id @default(uuid())
+  name              String       @unique
+  description       String?
+  workflowId        String       @unique
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId    String
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  processes         Process[]
+  completeWorkflows Workflow[]   @relation("CompleteWorkflows")
+  ongoingWorkflows  Workflow[]   @relation("OngoingWorkflows")
+  archiveWorkflows  Workflow[]   @relation("ArchiveWorkflows")
 
   @@unique([organizationId, workflowId])
 }
 
 model Workflow {
-  id             String             @id @default(uuid())
-  name           String
-  description    String?
-  approval       Boolean            @default(false)
-  status         PresentationStatus @default(public)
-  processes      Process[]
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  workflowRuns   WorkflowRun[]
-  n8nWorkflows   N8nWorkflow[]
-  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-  permissions    Permission[]
+  id                   String             @id @default(uuid())
+  name                 String
+  description          String?
+  approval             Boolean            @default(false)
+  status               PresentationStatus @default(public)
+  processes            Process[]
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  workflowRuns         WorkflowRun[]
+  organization         Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId       String
+  permissions          Permission[]
+  n8nCompleteWorkflows N8nWorkflow[]      @relation("CompleteWorkflows")
+  n8nOngoingWorkflows  N8nWorkflow[]      @relation("OngoingWorkflows")
+  n8nArchiveWorkflows  N8nWorkflow[]      @relation("ArchiveWorkflows")
 }
 
 model Process {
