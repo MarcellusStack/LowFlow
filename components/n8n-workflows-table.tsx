@@ -2,28 +2,35 @@
 import { ActionIcon, Group, Title } from "@mantine/core";
 import { MantineTable } from "@components/mantine-table";
 import { tableColumnProps } from "@constants/index";
-import { deleteN8nOngoingWorkflow, WorkflowN8nsProps } from "../_actions";
+
 import { modals } from "@mantine/modals";
 import { ButtonAction } from "@components/button-action";
 import { IconTrash } from "@tabler/icons-react";
-import { CreateN8nOngoingWorkflowForm } from "./create-n8n-ongoing-workflow-form";
 import { QuickSearchAdd } from "@components/quick-search-add";
+import { ConnectN8nWorkflowForm } from "./connect-n8n-workflow-form";
+import { ProcessN8nsProps } from "../app/(app)/processes/[id]/n8n/_actions";
 
-export const N8nOngoingWorkflowsTable = ({
-  workflowId,
+export const N8nWorkflows = ({
+  id,
+  title,
   n8ns,
+  createAction,
+  deleteAction,
 }: {
-  workflowId: string;
-  n8ns: WorkflowN8nsProps["n8nOngoingWorkflows"];
+  id: string;
+  title: "Complete" | "Ongoing" | "Reset" | "Archive";
+  n8ns: ProcessN8nsProps;
+  createAction: any;
+  deleteAction: any;
 }) => {
   return (
     <>
       <QuickSearchAdd
         title="Connect N8n"
-        content={<CreateN8nOngoingWorkflowForm id={workflowId} />}
+        content={<ConnectN8nWorkflowForm id={id} action={createAction} />}
       />
       <Title order={2} size="h3" fw={700}>
-        n8n Ongoing Workflows
+        n8n {title} Workflows
       </Title>
       <MantineTable
         records={n8ns}
@@ -60,10 +67,10 @@ export const N8nOngoingWorkflowsTable = ({
                             hideModals
                             color="red"
                             fullWidth
-                            action={deleteN8nOngoingWorkflow}
+                            action={deleteAction}
                             values={{
                               n8nWorkflow: { name: n8n.name, id: n8n.id },
-                              id: workflowId,
+                              id: id,
                             }}
                           >
                             Disconnect
@@ -85,7 +92,7 @@ export const N8nOngoingWorkflowsTable = ({
             ...tableColumnProps,
           },
         ]}
-        storeKey="n8ns-ongoing-workflow-table"
+        storeKey={`n8ns-workflows-table-${id}`}
       />
     </>
   );

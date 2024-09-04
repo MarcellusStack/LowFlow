@@ -1,10 +1,11 @@
 "use server";
+import { processN8nSchema } from "@schemas/index";
 import prisma from "@server/db";
 import { authedProcedure } from "@server/utils/procedures";
 import { authFilterQuery } from "@server/utils/query-clients";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
-import { processN8nSchema } from "./_schemas";
+
 
 export const getWorkflowN8ns = cache(
   authFilterQuery(async (user, search) => {
@@ -48,7 +49,7 @@ export type WorkflowN8nsProps = NonNullable<
   Awaited<ReturnType<typeof getWorkflowN8ns>>
 >;
 
-export const createN8nCompleteWorkflow = authedProcedure
+export const connectN8nCompleteWorkflow = authedProcedure
   .createServerAction()
   .input(processN8nSchema)
   .handler(async ({ input, ctx }) => {
@@ -74,7 +75,7 @@ export const createN8nCompleteWorkflow = authedProcedure
     return { message: `Connected N8n` };
   });
 
-export const deleteN8nCompleteWorkflow = authedProcedure
+export const disconnectN8nCompleteWorkflow = authedProcedure
   .createServerAction()
   .input(processN8nSchema)
   .handler(async ({ input, ctx }) => {
@@ -100,7 +101,7 @@ export const deleteN8nCompleteWorkflow = authedProcedure
     return { message: `Disconnected n8n` };
   });
 
-export const createN8nOngoingWorkflow = authedProcedure
+export const connectN8nOngoingWorkflow = authedProcedure
   .createServerAction()
   .input(processN8nSchema)
   .handler(async ({ input, ctx }) => {
@@ -126,7 +127,7 @@ export const createN8nOngoingWorkflow = authedProcedure
     return { message: `Connected N8n` };
   });
 
-export const deleteN8nOngoingWorkflow = authedProcedure
+export const disconnectN8nOngoingWorkflow = authedProcedure
   .createServerAction()
   .input(processN8nSchema)
   .handler(async ({ input, ctx }) => {
@@ -152,7 +153,7 @@ export const deleteN8nOngoingWorkflow = authedProcedure
     return { message: `Disconnected n8n` };
   });
 
-export const createN8nArchivedWorkflow = authedProcedure
+export const connectN8nArchiveWorkflow = authedProcedure
   .createServerAction()
   .input(processN8nSchema)
   .handler(async ({ input, ctx }) => {
@@ -178,7 +179,7 @@ export const createN8nArchivedWorkflow = authedProcedure
     return { message: `Connected N8n` };
   });
 
-export const deleteN8nArchivedWorkflow = authedProcedure
+export const disconnectN8nArchiveWorkflow = authedProcedure
   .createServerAction()
   .input(processN8nSchema)
   .handler(async ({ input, ctx }) => {

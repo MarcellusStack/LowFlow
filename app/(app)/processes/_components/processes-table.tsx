@@ -41,10 +41,18 @@ export const ProcessesTable = ({
           ...tableColumnProps,
         },
         {
-          accessor: "n8nWorkflows",
-          title: "n8n Workflows",
-          render: ({ n8nWorkflows }) => (
-            <Text size="sm">{n8nWorkflows.length}</Text>
+          accessor: "n8nCompleteWorkflows",
+          title: "n8n Complete Workflows",
+          render: ({ n8nCompleteWorkflows }) => (
+            <Text size="sm">{n8nCompleteWorkflows.length}</Text>
+          ),
+          ...tableColumnProps,
+        },
+        {
+          accessor: "n8nOngoingWorkflows",
+          title: "n8n Ongoing Workflows",
+          render: ({ n8nOngoingWorkflows }) => (
+            <Text size="sm">{n8nOngoingWorkflows.length}</Text>
           ),
           ...tableColumnProps,
         },

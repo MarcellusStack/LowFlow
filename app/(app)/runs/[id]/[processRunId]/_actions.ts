@@ -209,7 +209,7 @@ export const completeRun = authedProcedure
               },
               process: {
                 select: {
-                  n8nWorkflows: {
+                  n8nCompleteWorkflows: {
                     select: {
                       name: true,
                     },
@@ -219,11 +219,11 @@ export const completeRun = authedProcedure
             },
           });
 
-          if (run.process.n8nWorkflows.length > 0) {
+          if (run.process.n8nCompleteWorkflows.length > 0) {
             const submissionData = run.submission.data;
 
             await Promise.all(
-              run.process.n8nWorkflows.map(async (workflow) => {
+              run.process.n8nCompleteWorkflows.map(async (workflow) => {
                 await callN8nWebhook({
                   workflowName: workflow.name,
                   submissionData: submissionData,

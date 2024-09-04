@@ -1,9 +1,12 @@
-import { notFound } from "next/navigation";
-import { getProcessN8ns } from "./_actions";
-import { EntityMultiSelect } from "@components/entity-multi-select";
-import { QuickSearchAdd } from "@components/quick-search-add";
-import { CreateProcessN8nForm } from "./_components/create-process-n8n-form";
-import { ProcessN8nsTable } from "./_components/process-n8ns-table";
+import { N8nWorkflows } from "@components/n8n-workflows-table";
+import {
+  connectN8nCompletedProcessWorkflow,
+  connectN8nOngoingProcessWorkflow,
+  disconnectN8nCompletedProcessWorkflow,
+  disconnectN8nOngoingProcessWorkflow,
+  getProcessN8ns,
+} from "./_actions";
+
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -12,12 +15,20 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <QuickSearchAdd
-        title="Connect N8n"
-        content={<CreateProcessN8nForm id={id} />}
+      <N8nWorkflows
+        id={id}
+        title="Complete"
+        n8ns={n8ns.n8nCompleteWorkflows || []}
+        createAction={connectN8nCompletedProcessWorkflow}
+        deleteAction={disconnectN8nCompletedProcessWorkflow}
       />
-
-      <ProcessN8nsTable processId={id} n8ns={n8ns.n8nWorkflows || []} />
+      <N8nWorkflows
+        id={id}
+        title="Reset"
+        n8ns={n8ns.n8nOngoingWorkflows || []}
+        createAction={connectN8nOngoingProcessWorkflow}
+        deleteAction={disconnectN8nOngoingProcessWorkflow}
+      />
     </>
   );
 }

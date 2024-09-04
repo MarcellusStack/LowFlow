@@ -1,7 +1,14 @@
-import { getWorkflowN8ns } from "./_actions";
-import { N8nArchivedWorkflowsTable } from "./_components/n8n-archived-workflows-table";
-import { N8nCompleteWorkflowsTable } from "./_components/n8n-complete-workflows-table";
-import { N8nOngoingWorkflowsTable } from "./_components/n8n-ongoing-workflows-table";
+import { N8nWorkflows } from "../../../processes/[id]/n8n/_components/n8n-workflows-table";
+import {
+  connectN8nArchiveWorkflow,
+  connectN8nCompleteWorkflow,
+  connectN8nOngoingWorkflow,
+  disconnectN8nArchiveWorkflow,
+  disconnectN8nCompleteWorkflow,
+  disconnectN8nOngoingWorkflow,
+  getWorkflowN8ns,
+} from "./_actions";
+
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -10,19 +17,28 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <N8nCompleteWorkflowsTable
-        workflowId={id}
+      <N8nWorkflows
+        id={id}
+        title="Complete"
         n8ns={n8ns.n8nCompleteWorkflows || []}
+        createAction={connectN8nCompleteWorkflow}
+        deleteAction={disconnectN8nCompleteWorkflow}
       />
 
-      <N8nOngoingWorkflowsTable
-        workflowId={id}
-        n8ns={n8ns.n8nOngoingWorkflows || []}
+      <N8nWorkflows
+        id={id}
+        title="Ongoing"
+        n8ns={n8ns.n8nCompleteWorkflows || []}
+        createAction={connectN8nOngoingWorkflow}
+        deleteAction={disconnectN8nOngoingWorkflow}
       />
 
-      <N8nArchivedWorkflowsTable
-        workflowId={id}
+      <N8nWorkflows
+        id={id}
+        title="Archive"
         n8ns={n8ns.n8nArchiveWorkflows || []}
+        createAction={connectN8nArchiveWorkflow}
+        deleteAction={disconnectN8nArchiveWorkflow}
       />
     </>
   );

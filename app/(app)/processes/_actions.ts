@@ -58,7 +58,12 @@ export const getProcesses = authFilterQuery(async (user, search) => {
           name: true,
         },
       },
-      n8nWorkflows: {
+      n8nCompleteWorkflows: {
+        select: {
+          id: true,
+        },
+      },
+      n8nOngoingWorkflows: {
         select: {
           id: true,
         },

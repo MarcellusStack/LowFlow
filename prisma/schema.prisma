@@ -64,7 +64,8 @@ model N8nWorkflow {
   organizationId    String
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
-  processes         Process[]
+  completeProcesses Process[]    @relation("CompleteProcessWorkflows")
+  ongoingProcesses  Process[]    @relation("OngoingProcessWorkflows")
   completeWorkflows Workflow[]   @relation("CompleteWorkflows")
   ongoingWorkflows  Workflow[]   @relation("OngoingWorkflows")
   archiveWorkflows  Workflow[]   @relation("ArchiveWorkflows")
@@ -91,22 +92,23 @@ model Workflow {
 }
 
 model Process {
-  id             String             @id @default(uuid())
-  workflowId     String
-  name           String
-  description    String?
-  status         PresentationStatus @default(public)
-  fields         Json?
-  order          Int
-  workflow       Workflow           @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  processRuns    ProcessRun[]
-  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-  n8nWorkflows   N8nWorkflow[]
-  permission     Permission?        @relation(fields: [permissionId], references: [id])
-  permissionId   String?
+  id                   String             @id @default(uuid())
+  workflowId           String
+  name                 String
+  description          String?
+  status               PresentationStatus @default(public)
+  fields               Json?
+  order                Int
+  workflow             Workflow           @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  processRuns          ProcessRun[]
+  organization         Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId       String
+  n8nCompleteWorkflows N8nWorkflow[]      @relation("CompleteProcessWorkflows")
+  n8nOngoingWorkflows  N8nWorkflow[]      @relation("OngoingProcessWorkflows")
+  permission           Permission?        @relation(fields: [permissionId], references: [id])
+  permissionId         String?
 }
 
 model WorkflowRun {
