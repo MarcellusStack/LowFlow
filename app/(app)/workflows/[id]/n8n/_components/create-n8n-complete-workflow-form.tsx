@@ -4,14 +4,14 @@ import { useForm } from "@mantine/form";
 import { Button, Stack } from "@mantine/core";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useEnhancedAction } from "@hooks/use-enhanced-action";
-import { createWorkflowN8n } from "../_actions";
+import { createN8nCompleteWorkflow } from "../_actions";
 import { EntitySelect } from "@components/entity-select";
 import { getN8nsAction } from "@server/_actions";
 import { processN8nSchema } from "../_schemas";
 
-export const CreateWorkflowN8nForm = ({ id }: { id: string }) => {
+export const CreateN8nCompleteWorkflowForm = ({ id }: { id: string }) => {
   const form = useForm({
-    name: "create-workflow-n8n",
+    name: "create-n8n-complete-workflow-form",
     mode: "uncontrolled",
     initialValues: {
       n8nWorkflow: {
@@ -23,7 +23,7 @@ export const CreateWorkflowN8nForm = ({ id }: { id: string }) => {
     validate: zodResolver(processN8nSchema),
   });
   const { isPending, execute } = useEnhancedAction({
-    action: createWorkflowN8n,
+    action: createN8nCompleteWorkflow,
     hideModals: true,
   });
 
@@ -35,7 +35,7 @@ export const CreateWorkflowN8nForm = ({ id }: { id: string }) => {
     >
       <Stack gap="sm">
         <EntitySelect
-          formActionName="create-workflow-n8n"
+          formActionName="create-n8n-complete-workflow-form"
           formField="n8nWorkflow"
           label="N8n Workflow"
           action={getN8nsAction}

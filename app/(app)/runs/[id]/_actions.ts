@@ -84,7 +84,7 @@ export const completeRun = authedProcedure
               workflow: {
                 select: {
                   id: true,
-                  n8nWorkflows: {
+                  n8nCompleteWorkflows: {
                     select: {
                       name: true,
                     },
@@ -135,13 +135,13 @@ export const completeRun = authedProcedure
             return { message: `Not all process runs are completed` };
           }
 
-          if (run.workflow.n8nWorkflows.length > 0) {
+          if (run.workflow.n8nCompleteWorkflows.length > 0) {
             const combinedSubmissionData = run.processRuns.map(
               (processRun) => processRun.submission.data
             );
 
             await Promise.all(
-              run.workflow.n8nWorkflows.map(async (workflow) => {
+              run.workflow.n8nCompleteWorkflows.map(async (workflow) => {
                 const url = `${process.env.NEXT_PUBLIC_N8N_URL}/webhook/${workflow.name}`;
 
                 const response = await fetch(url, {

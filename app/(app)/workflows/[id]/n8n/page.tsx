@@ -1,8 +1,7 @@
-import { notFound } from "next/navigation";
 import { getWorkflowN8ns } from "./_actions";
-import { QuickSearchAdd } from "@components/quick-search-add";
-import { CreateWorkflowN8nForm } from "./_components/create-workflow-n8n-form";
-import { WorkflowN8nsTable } from "./_components/workflow-n8ns-table";
+import { N8nArchivedWorkflowsTable } from "./_components/n8n-archived-workflows-table";
+import { N8nCompleteWorkflowsTable } from "./_components/n8n-complete-workflows-table";
+import { N8nOngoingWorkflowsTable } from "./_components/n8n-ongoing-workflows-table";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -11,12 +10,20 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <QuickSearchAdd
-        title="Connect N8n"
-        content={<CreateWorkflowN8nForm id={id} />}
+      <N8nCompleteWorkflowsTable
+        workflowId={id}
+        n8ns={n8ns.n8nCompleteWorkflows || []}
       />
 
-      <WorkflowN8nsTable processId={id} n8ns={n8ns.n8nWorkflows || []} />
+      <N8nOngoingWorkflowsTable
+        workflowId={id}
+        n8ns={n8ns.n8nOngoingWorkflows || []}
+      />
+
+      <N8nArchivedWorkflowsTable
+        workflowId={id}
+        n8ns={n8ns.n8nArchivedWorkflows || []}
+      />
     </>
   );
 }

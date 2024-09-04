@@ -14,7 +14,23 @@ export const getWorkflowN8ns = cache(
         organizationId: user.organizationId,
       },
       select: {
-        n8nWorkflows: {
+        n8nCompleteWorkflows: {
+          select: {
+            id: true,
+            workflowId: true,
+            name: true,
+            description: true,
+          },
+        },
+        n8nOngoingWorkflows: {
+          select: {
+            id: true,
+            workflowId: true,
+            name: true,
+            description: true,
+          },
+        },
+        n8nArchiveWorkflows: {
           select: {
             id: true,
             workflowId: true,
@@ -28,11 +44,11 @@ export const getWorkflowN8ns = cache(
   })
 );
 
-export type ProcessN8nsProps = NonNullable<
+export type WorkflowN8nsProps = NonNullable<
   Awaited<ReturnType<typeof getWorkflowN8ns>>
 >;
 
-export const createWorkflowN8n = authedProcedure
+export const createN8nCompleteWorkflow = authedProcedure
   .createServerAction()
   .input(processN8nSchema)
   .handler(async ({ input, ctx }) => {
@@ -42,7 +58,7 @@ export const createWorkflowN8n = authedProcedure
       await prisma.workflow.update({
         where: { id: input.id, organizationId: user.organizationId },
         data: {
-          n8nWorkflows: {
+          n8nCompleteWorkflows: {
             connect: {
               id: input.n8nWorkflow.id,
             },
@@ -58,7 +74,7 @@ export const createWorkflowN8n = authedProcedure
     return { message: `Connected N8n` };
   });
 
-export const deleteWorkflowN8n = authedProcedure
+export const deleteN8nCompleteWorkflow = authedProcedure
   .createServerAction()
   .input(processN8nSchema)
   .handler(async ({ input, ctx }) => {
@@ -68,7 +84,111 @@ export const deleteWorkflowN8n = authedProcedure
       await prisma.workflow.update({
         where: { id: input.id, organizationId: user.organizationId },
         data: {
-          n8nWorkflows: {
+          n8nCompleteWorkflows: {
+            disconnect: {
+              id: input.n8nWorkflow.id,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      throw new Error(`There was an error please try again ${error.message}`);
+    }
+
+    revalidatePath(`/(app)/workflows/${input.id}/n8n`, "page");
+
+    return { message: `Disconnected n8n` };
+  });
+
+export const createN8nOngoingWorkflow = authedProcedure
+  .createServerAction()
+  .input(processN8nSchema)
+  .handler(async ({ input, ctx }) => {
+    try {
+      const { user } = ctx;
+
+      await prisma.workflow.update({
+        where: { id: input.id, organizationId: user.organizationId },
+        data: {
+          n8nOngoingWorkflows: {
+            connect: {
+              id: input.n8nWorkflow.id,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      throw new Error(`There was an error please try again ${error.message}`);
+    }
+
+    revalidatePath(`/(app)/workflows/${input.id}/n8n`, "page");
+
+    return { message: `Connected N8n` };
+  });
+
+export const deleteN8nOngoingWorkflow = authedProcedure
+  .createServerAction()
+  .input(processN8nSchema)
+  .handler(async ({ input, ctx }) => {
+    try {
+      const { user } = ctx;
+
+      await prisma.workflow.update({
+        where: { id: input.id, organizationId: user.organizationId },
+        data: {
+          n8nOngoingWorkflows: {
+            disconnect: {
+              id: input.n8nWorkflow.id,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      throw new Error(`There was an error please try again ${error.message}`);
+    }
+
+    revalidatePath(`/(app)/workflows/${input.id}/n8n`, "page");
+
+    return { message: `Disconnected n8n` };
+  });
+
+export const createN8nArchivedWorkflow = authedProcedure
+  .createServerAction()
+  .input(processN8nSchema)
+  .handler(async ({ input, ctx }) => {
+    try {
+      const { user } = ctx;
+
+      await prisma.workflow.update({
+        where: { id: input.id, organizationId: user.organizationId },
+        data: {
+          n8nArchiveWorkflows: {
+            connect: {
+              id: input.n8nWorkflow.id,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      throw new Error(`There was an error please try again ${error.message}`);
+    }
+
+    revalidatePath(`/(app)/workflows/${input.id}/n8n`, "page");
+
+    return { message: `Connected N8n` };
+  });
+
+export const deleteN8nArchivedWorkflow = authedProcedure
+  .createServerAction()
+  .input(processN8nSchema)
+  .handler(async ({ input, ctx }) => {
+    try {
+      const { user } = ctx;
+
+      await prisma.workflow.update({
+        where: { id: input.id, organizationId: user.organizationId },
+        data: {
+          n8nArchiveWorkflows: {
             disconnect: {
               id: input.n8nWorkflow.id,
             },
