@@ -132,7 +132,6 @@ export const updateRun = authedProcedure
             }
           }
 
-          // Update the workflow run and process run
           await tx.workflowRun.update({
             where: {
               id: run.workflowRunId,
@@ -284,10 +283,33 @@ export const resetRun = authedProcedure
               submission: {
                 select: {
                   id: true,
+                  data: true,
+                },
+              },
+              process: {
+                select: {
+                  n8nOngoingWorkflows: {
+                    select: {
+                      name: true,
+                    },
+                  },
                 },
               },
             },
           });
+
+          if (run.process.n8nOngoingWorkflows.length > 0) {
+            const submissionData = run.submission.data;
+
+            await Promise.all(
+              run.process.n8nOngoingWorkflows.map(async (workflow) => {
+                await callN8nWebhook({
+                  workflowName: workflow.name,
+                  submissionData: submissionData,
+                });
+              })
+            );
+          }
 
           await tx.processRun.update({
             where: {
