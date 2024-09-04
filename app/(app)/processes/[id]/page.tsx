@@ -10,5 +10,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (!process) {
     notFound();
   }
+
   return <GeneralProcessForm process={process} />;
 }
