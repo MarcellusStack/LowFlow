@@ -8,18 +8,9 @@ import { cache } from "react";
 import { PresentationStatus } from "@prisma/client";
 import { deleteSchema } from "@schemas/index";
 import { updateProcessSchema } from "../_schemas";
-import { getReadPermissions } from "@utils/get-read-permissions";
 
 export const getProcess = cache(
   authFilterQuery(async (user, search) => {
-    const { canReadAll, specificEntityIds } = getReadPermissions(
-      user,
-      "process"
-    );
-
-    if (!canReadAll && !specificEntityIds.includes(search.id)) {
-      throw new Error("You do not have permission to view this process.");
-    }
     return await prisma.process.findUnique({
       where: {
         id: search.id,
