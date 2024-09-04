@@ -5,6 +5,7 @@ import { authedProcedure } from "@server/utils/procedures";
 import { authFilterQuery } from "@server/utils/query-clients";
 import { revalidatePath } from "next/cache";
 import { runSchema, updateRunSchema } from "./_schema";
+import { callN8nWebhook } from "@server/utils/call-n8n-webhook";
 
 export const getProcessRun = authFilterQuery(async (user, search) => {
   return await prisma.processRun.findUnique({
@@ -223,20 +224,10 @@ export const completeRun = authedProcedure
 
             await Promise.all(
               run.process.n8nWorkflows.map(async (workflow) => {
-                const url = `${process.env.NEXT_PUBLIC_N8N_URL}/webhook/${workflow.name}`;
-
-                const response = await fetch(url, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    "X-N8N-WEBHOOK-API-KEY": process.env.N8N_API_KEY as string,
-                  },
-                  body: JSON.stringify(submissionData),
+                await callN8nWebhook({
+                  workflowName: workflow.name,
+                  submissionData: submissionData,
                 });
-
-                if (!response.ok) {
-                  throw new Error(`Failed to send data to ${workflow.name}`);
-                }
               })
             );
           }
